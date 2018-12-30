@@ -1,0 +1,7 @@
+# create environment & install packages:
+conda create -n geotest3 -c conda-forge python=3.6.5 jupyterlab geopandas geoplot osmnx pysal contextily rasterio rasterstats
+conda activate geotest3
+pip install pycrs
+
+# open jupyterlab
+jupyter lab
