@@ -3,16 +3,16 @@ import json
 from urllib.parse import urlparse, urlencode
 
 def getGeocodeRequest(search_word):
-    print('\nSearch word:', search_word)
     vars = {'text': search_word, 'size': 1}
     baseurl = 'https://api.digitransit.fi/geocoding/v1/search?'
     request = baseurl + urlencode(vars)
-    print('request:', request)
     return request
 
 def geocode(search_word):
+    print('\nGeocoding:', search_word)
     # build request url
     request = getGeocodeRequest(search_word)
+    print('request:', request)
     # execute API call
     georeq = requests.get(request)
     # print('JSON:', georeq.text)
