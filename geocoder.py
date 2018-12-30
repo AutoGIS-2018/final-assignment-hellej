@@ -8,5 +8,5 @@ while True:
     
     if(len(search_word)==0):
         break
-        
+    
     coords = gc.geocode(search_word)

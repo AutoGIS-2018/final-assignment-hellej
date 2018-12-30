@@ -3,6 +3,7 @@ import json
 from urllib.parse import urlparse, urlencode
 
 def getGeocodeRequest(search_word):
+    # build request url for Digitransit Geocoding API 
     vars = {'text': search_word, 'size': 1}
     baseurl = 'https://api.digitransit.fi/geocoding/v1/search?'
     request = baseurl + urlencode(vars)
@@ -10,22 +11,21 @@ def getGeocodeRequest(search_word):
 
 def geocode(search_word):
     print('\nGeocoding:', search_word)
-    # build request url
+    
     request = getGeocodeRequest(search_word)
     print('request:', request)
+
     # execute API call
     georeq = requests.get(request)
-    # print('JSON:', georeq.text)
     
+    # print('JSON:', georeq.text)
     # parse result from json to python dictionary
     parsed_result = json.loads(georeq.text)
-        
+    
     # extract geocoded feature (GeoJSON)
     feat = parsed_result['features'][0]
     geom = feat['geometry']
     props = feat['properties']
-    # print(geom)
-    # print(props)
     
     print('found:', props['label'])
     print('at:', geom['coordinates'])
