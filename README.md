@@ -4,7 +4,7 @@ Read the final assignment instructions from the [https://autogis.github.io](http
 
 You should upload all your code(s) / notebook(s) into this repository and write a **good documentation** how everything works.
 
-## Setting up the python enviroment
+## Setting up the python environment
 ```
 $ conda create -n geoenv -c conda-forge python=3.6.5 jupyterlab geopandas geoplot osmnx pysal contextily rasterio rasterstats
 $ pip install pycrs
