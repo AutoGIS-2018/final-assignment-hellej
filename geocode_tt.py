@@ -5,7 +5,6 @@ import geocode as gc
 
 search_word = 'physicum'
 coords = gc.geocode(search_word)
-print(coords)
 
 
 # GET TRAVEL TIMES
@@ -17,7 +16,6 @@ import matrix_utils as mu
 cinemas = gpd.read_file('data/temp/cinemas.shp')
 large_cinemas = cinemas.loc[cinemas['rooms'] > 2]
 target_points = large_cinemas[:4]
-print(target_points.head(5))
 
 #%%
 target_info = mu.targets_ykr_ids(target_points, 'name')
@@ -40,4 +38,3 @@ best_routes = mu.get_best_routes(all_ttimes_summary, '', '')
 #%%
 mu.print_best_route_info(best_routes, target_info)
 
-#%%

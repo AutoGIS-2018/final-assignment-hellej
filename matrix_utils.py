@@ -10,15 +10,16 @@ def targets_ykr_ids(targets, name):
         targets = targets.to_crs(grid.crs)
 
     # CRS should now match
-    print('CRS match:', targets.crs == grid.crs)
+    print('Extract YKR ids for targets...\nCRS match:', targets.crs == grid.crs)
 
     # join ykr grid info to targets
     targets_ykr = gpd.sjoin(targets, grid, how="inner", op="within")
 
-    # gather target info to dictionary
+    # gather target info to dictionary (ykr_id : name)
     target_info = {}
-    for idx, target in targets_ykr.iterrows():
-        target_info[target['YKR_ID']] = target[name]
+    for target in targets_ykr.itertuples(index=True, name='Pandas'):
+        ykr_id = getattr(target, 'YKR_ID')
+        target_info[ykr_id] = getattr(target, name)
     print('target info:', target_info)
     return target_info
 
@@ -38,16 +39,14 @@ def get_tt_between_targets(target_info, folder):
         data = pd.read_csv(filepaths[ykr_id], sep=';')
         data = data[['from_id', 'to_id', 'pt_m_t']]
         tt_dfs[ykr_id] = data
-        print(tt_dfs[ykr_id].head(5))
+        # print(tt_dfs[ykr_id].head(5))
     return tt_dfs
 
 def get_target_permutations(tt_dfs):
     to_ids = tt_dfs.keys()
-    print('targets:')
-    for to_id in to_ids:
-        print(' to id:', to_id)
+    print('Get all possible orders of targets...')
     to_ids_perms = list(itr.permutations(to_ids, len(to_ids)))
-    print('found', len(to_ids_perms), 'possible orders')
+    print('found', len(to_ids_perms), 'permutations')
     return to_ids_perms
 
 def get_all_ttimes(target_perms, tt_dfs):
@@ -71,7 +70,7 @@ def calculate_total_ttimes(perms_ttimes, target_info):
     perms_ttimes['last_id'] = [perm[len(perm)-1] for perm in perms_ttimes['perm']]
     perms_ttimes['last_name'] = [target_info[perm[len(perm)-1]] for perm in perms_ttimes['perm']]
     perms_ttimes['tot_ttime'] = [sum(ttimes) for ttimes in perms_ttimes['ttimes']]
-    print(perms_ttimes.head(5))
+    # print(perms_ttimes.head(5))
     return perms_ttimes
 
 def get_best_routes(all_ttimes_summary, origin, target):
@@ -95,7 +94,7 @@ def get_best_routes(all_ttimes_summary, origin, target):
     if (count_routes > 1):
         print('found multiple best routes ('+ str(count_routes) +')')
     elif (count_routes == 1):
-        print('found one best route')
+        print('found one best route:')
     print(best_routes[['first_name', 'ttimes', 'last_name', 'tot_ttime']].head(5))
     return best_routes
 
