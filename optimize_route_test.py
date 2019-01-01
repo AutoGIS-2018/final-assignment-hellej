@@ -1,8 +1,9 @@
 
 # TEST GEOCODER
 #%%
-import geocode as gc
+import utils.geocode as gc
 
+#%%
 search_word = 'physicum'
 coords = gc.geocode(search_word)
 
@@ -10,7 +11,7 @@ coords = gc.geocode(search_word)
 # GET TRAVEL TIMES
 #%%
 import geopandas as gpd
-import matrix_utils as mu
+import utils.matrix as mu
 
 #%%
 cinemas = gpd.read_file('data/temp/cinemas.shp')
@@ -38,3 +39,4 @@ best_routes = mu.get_best_routes(all_ttimes_summary, '', '')
 #%%
 mu.print_best_route_info(best_routes, target_info)
 
+#%%

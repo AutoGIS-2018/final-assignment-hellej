@@ -1,4 +1,4 @@
-import geocode as gc
+import utils.geocode as gc
 
 print('\nStarting geocoder')
 
