@@ -1,12 +1,37 @@
 import utils.geocode as gc
 
-print('\nStarting geocoder')
+def geocodeInputs():
+    print('\nStarting geocoder.')
+    print('You can end geocoding any time by typing "q" and pressing enter.')
 
-while True:
-    print('\nWrite the search word or address to geocode...')
-    search_word = input()
-    
-    if(len(search_word)==0):
-        break
-    
-    coords = gc.geocode(search_word)
+    geocoded = []
+
+    while True:
+        print('\nWrite the search word or address to geocode or "q" to finish: ', end='')
+        search_word = input().lower()
+        if(search_word == 'q'):
+            break
+        if(search_word == ''):
+            continue
+        
+        result = gc.geocode(search_word)
+
+        while True:
+            print('Are you happy with the geocoding result? y/n: ', end='')
+            geocode_ok = input().lower()
+
+            if(geocode_ok == 'y'):
+                while True:
+                    print('Give a short name for the place: ', end='')
+                    name = input()
+                    if (name == ''):
+                        continue
+                    result['name'] = name
+                    geocoded.append(result)
+                    break
+                break
+            elif(geocode_ok == 'n'):
+                break
+            else:
+                continue
+    return geocoded

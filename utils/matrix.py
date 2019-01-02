@@ -39,7 +39,6 @@ def get_tt_between_targets(target_info, folder):
         data = pd.read_csv(filepaths[ykr_id], sep=';')
         data = data[['from_id', 'to_id', 'pt_m_t']]
         tt_dfs[ykr_id] = data
-        # print(tt_dfs[ykr_id].head(5))
     return tt_dfs
 
 def get_target_permutations(tt_dfs):
