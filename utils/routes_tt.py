@@ -29,7 +29,6 @@ def calculate_total_ttimes(perms_ttimes, target_info):
     perms_ttimes['last_id'] = [perm[len(perm)-1] for perm in perms_ttimes['perm']]
     perms_ttimes['last_name'] = [target_info[perm[len(perm)-1]] for perm in perms_ttimes['perm']]
     perms_ttimes['tot_ttime'] = [sum(ttimes) for ttimes in perms_ttimes['ttimes']]
-    # print(perms_ttimes.head(5))
     return perms_ttimes
 
 def get_best_routes(all_ttimes_summary, origin, target):
@@ -54,7 +53,7 @@ def get_best_routes(all_ttimes_summary, origin, target):
         print('found multiple best routes ('+ str(count_routes) +')')
     elif (count_routes == 1):
         print('found one best route:')
-    print(best_routes[['first_name', 'ttimes', 'last_name', 'tot_ttime']].head(5))
+    print(best_routes[['first_name', 'ttimes', 'last_name', 'tot_ttime']])
     return best_routes
 
 def print_best_route_info(best_routes, target_info):
