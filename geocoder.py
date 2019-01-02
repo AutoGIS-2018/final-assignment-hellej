@@ -7,7 +7,7 @@ def geocodeInputs():
     geocoded = []
 
     while True:
-        print('\nWrite the search word or address to geocode or "q" to finish: ', end='')
+        print('\nWrite the search word or address to geocode or "q" to proceed: ', end='')
         search_word = input().lower()
         if(search_word == 'q'):
             break

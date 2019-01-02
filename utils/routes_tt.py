@@ -3,7 +3,7 @@ import pandas as pd
 
 def get_target_permutations(tt_dfs):
     to_ids = tt_dfs.keys()
-    print('Get all possible orders of targets...')
+    print('\nGet all possible routes...')
     to_ids_perms = list(itr.permutations(to_ids, len(to_ids)))
     print('found', len(to_ids_perms), 'route options')
     return to_ids_perms
@@ -45,8 +45,8 @@ def get_best_routes(all_ttimes_summary, origin, target):
         print('no destination defined...')
     
     # order routes by total travel time
-    summary_df.sort_values(by='tot_ttime', ascending=True).reset_index(drop=True)
-    best_routes = summary_df[:5]
+    best_routes = summary_df.sort_values(by='tot_ttime', ascending=True).reset_index(drop=True)
+    best_routes = best_routes[:5]
     return best_routes
 
 def print_route(route, target_info, idx):
@@ -67,10 +67,9 @@ def print_best_route_info(best_routes, target_info):
     # count foutes having minimum travel time
     count_best_routes = len(best_routes.loc[best_routes['tot_ttime'] == min_tt].index)
     if (count_best_routes > 1):
-        print('found multiple best routes ('+ str(count_best_routes) +'):')
+        print('\nFound multiple best routes ('+ str(count_best_routes) +'):')
     elif (count_best_routes == 1):
-        print('found one best route:')
+        print('\nFound best routes:')
 
     for idx, route in best_routes[:4].iterrows():
         print_route(route, target_info, idx)
-    

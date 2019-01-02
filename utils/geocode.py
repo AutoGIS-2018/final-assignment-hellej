@@ -70,7 +70,7 @@ def loadInputShapefiles():
                 try:
                     file_path = shapefiles[file_num-1]
                     read_file = gpd.read_file(file_path)
-                    print('successfully loaded file:')
+                    print('\nSuccessfully loaded file:')
                     print(read_file)
                     return read_file
                 except:
@@ -79,7 +79,7 @@ def loadInputShapefiles():
 
 def saveToFile(targetGeom):
     while True:
-        print('\nSpecify a file for saving the locations: ', end='')
+        print('\nSpecify a file name for saving the locations: ', end='')
         filename = input()
         if (filename == ''):
             continue
