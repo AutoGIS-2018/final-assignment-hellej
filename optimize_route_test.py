@@ -1,11 +1,11 @@
 
-# TEST GEOCODER
-#%%
-import utils.geocode as gc
+# # TEST GEOCODER
+# #%%
+# import utils.geocode as gc
 
-#%%
-search_word = 'physicum'
-coords = gc.geocode(search_word)
+# #%%
+# search_word = 'physicum'
+# coords = gc.geocode(search_word)
 
 
 # GET TRAVEL TIMES
@@ -39,5 +39,3 @@ best_routes = rtts.get_best_routes(all_ttimes_summary, '', '')
 
 #%%
 rtts.print_best_route_info(best_routes, target_info)
-
-#%%

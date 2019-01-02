@@ -24,10 +24,10 @@ def get_all_ttimes(target_perms, tt_dfs):
     return perms_times
 
 def calculate_total_ttimes(perms_ttimes, target_info):
-    perms_ttimes['first_id'] = [perm[0] for perm in perms_ttimes['perm']]
-    perms_ttimes['first_name'] = [target_info[perm[0]] for perm in perms_ttimes['perm']]
-    perms_ttimes['last_id'] = [perm[len(perm)-1] for perm in perms_ttimes['perm']]
-    perms_ttimes['last_name'] = [target_info[perm[len(perm)-1]] for perm in perms_ttimes['perm']]
+    perms_ttimes['orig_id'] = [perm[0] for perm in perms_ttimes['perm']]
+    perms_ttimes['orig_name'] = [target_info[perm[0]] for perm in perms_ttimes['perm']]
+    perms_ttimes['dest_id'] = [perm[len(perm)-1] for perm in perms_ttimes['perm']]
+    perms_ttimes['dest_name'] = [target_info[perm[len(perm)-1]] for perm in perms_ttimes['perm']]
     perms_ttimes['tot_ttime'] = [sum(ttimes) for ttimes in perms_ttimes['ttimes']]
     return perms_ttimes
 
@@ -35,36 +35,42 @@ def get_best_routes(all_ttimes_summary, origin, target):
     summary_df = all_ttimes_summary.copy()
     if (origin != ''):
         print('origin defined:', origin)
-        summary_df = summary_df.loc[summary_df['first_name'] == origin]
+        summary_df = summary_df.loc[summary_df['orig_name'] == origin]
     else:
         print('no origin defined...')
     if (target != ''):
         print('destination defined:', target)
-        summary_df = summary_df.loc[summary_df['last_name'] == target]
+        summary_df = summary_df.loc[summary_df['dest_name'] == target]
     else:
         print('no destination defined...')
     
-    # get min travel time
-    min_tt = summary_df['tot_ttime'].min()
-    # filter only routes having min travel time
-    best_routes = summary_df.loc[summary_df['tot_ttime'] == min_tt]
-    count_routes = len(best_routes.index)
-    if (count_routes > 1):
-        print('found multiple best routes ('+ str(count_routes) +')')
-    elif (count_routes == 1):
-        print('found one best route:')
-    print(best_routes[['first_name', 'ttimes', 'last_name', 'tot_ttime']])
+    # order routes by total travel time
+    summary_df.sort_values(by='tot_ttime', ascending=True).reset_index(drop=True)
+    best_routes = summary_df[:5]
     return best_routes
 
-def print_best_route_info(best_routes, target_info):
-    route = best_routes.iloc[0]
+def print_route(route, target_info, idx):
     ykr_ids = route['perm']
     ttimes = route['ttimes']
     # print targets (and travel times) in best order
+    print(str(idx+1) +'. route: '+ str(route['tot_ttime']) +' min:')
     for idx, ykr_id in enumerate(ykr_ids):
         name = target_info[ykr_id]
         minutes = ''
         if (idx > 0):
             minutes = ' ('+ str(ttimes[idx-1]) +' min)'
-        print(str(idx+1)+'. '+ name + minutes)
-    print('total travel time:', route['tot_ttime'], 'min')
+        print(' '+str(idx+1)+'. '+ name + minutes)
+
+def print_best_route_info(best_routes, target_info):
+    # get min travel time
+    min_tt = best_routes['tot_ttime'].min()
+    # count foutes having minimum travel time
+    count_best_routes = len(best_routes.loc[best_routes['tot_ttime'] == min_tt].index)
+    if (count_best_routes > 1):
+        print('found multiple best routes ('+ str(count_best_routes) +'):')
+    elif (count_best_routes == 1):
+        print('found one best route:')
+
+    for idx, route in best_routes[:4].iterrows():
+        print_route(route, target_info, idx)
+    
