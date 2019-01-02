@@ -1,6 +1,10 @@
+import pandas as pd
+import geopandas as gpd
 import requests
 import json
 from urllib.parse import urlparse, urlencode
+from shapely.geometry import Point
+from fiona.crs import from_epsg
 
 def getGeocodeRequest(search_word):
     # build request url for Digitransit Geocoding API 
@@ -10,10 +14,10 @@ def getGeocodeRequest(search_word):
     return request
 
 def geocode(search_word):
-    print('\nGeocoding:', search_word)
+    # print('geocoding:', search_word)
     
     request = getGeocodeRequest(search_word)
-    print('request:', request)
+    # print('request:', request)
 
     # execute API call
     georeq = requests.get(request)
@@ -29,7 +33,10 @@ def geocode(search_word):
     
     print('found:', props['label'])
     print('at:', geom['coordinates'])
-    print('from neighbourhood:', props['neighbourhood'])
-    print('with confidence:', props['confidence'])
+    try:
+        print('from neighbourhood:', props['neighbourhood'])
+    except:
+        pass
+    print('with confidence:', round(props['confidence'],2))
     
-    return geom['coordinates']
+    return {'coords': geom['coordinates'], 'place': props['label'], 'confidence': round(props['confidence'],3), 'search_word': search_word}
