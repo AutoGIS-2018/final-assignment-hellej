@@ -2,7 +2,7 @@ import utils.geocode as gc
 
 def geocodeInputs():
     print('\nStarting geocoder.')
-    print('You can end geocoding any time by typing "q" and pressing enter.')
+    print('You can finish geocoding any time by typing "q" and pressing enter.')
 
     geocoded = []
 

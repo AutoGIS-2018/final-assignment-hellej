@@ -5,6 +5,7 @@ import json
 from urllib.parse import urlparse, urlencode
 from shapely.geometry import Point
 from fiona.crs import from_epsg
+import glob
 
 def getGeocodeRequest(search_word):
     # build request url for Digitransit Geocoding API 
@@ -53,3 +54,34 @@ def geoCodedToGeoDF(geocode_results):
     print('\nGeocoded:')
     print(geodf)
     return geodf
+
+def loadInputShapefiles():
+    shapefiles = glob.glob('input/*.shp')
+    if (len(shapefiles) > 0):
+        print('\nExisting locations (.shp) in the foldedr:')
+        for idx, shapefile in enumerate(shapefiles):
+            print(' ['+ str(idx+1) +']: '+ shapefile)
+        print('Do you want to import one of the above files? y/n: ', end='')
+        b_import_file = input().lower()
+        if (b_import_file == 'y'):
+            while True:
+                print('specify file number to import (1,2,3...): ', end='')
+                file_num = int(input())
+                try:
+                    file_path = shapefiles[file_num-1]
+                    read_file = gpd.read_file(file_path)
+                    print('successfully loaded file:')
+                    print(read_file)
+                    return read_file
+                except:
+                    print('invalid number...')
+                    continue
+
+def saveToFile(targetGeom):
+    while True:
+        print('\nSpecify a file for saving the locations: ', end='')
+        filename = input()
+        if (filename == ''):
+            continue
+        targetGeom.to_file('input/'+filename+'.shp')
+        break

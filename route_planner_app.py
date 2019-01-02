@@ -3,12 +3,16 @@ import utils.geocode as geocode
 import utils.matrix as mtrx
 import utils.routes_tt as rtts
 
-geocoded = gc.geocodeInputs()
+targetGeom = geocode.loadInputShapefiles()
 
-if (len(geocoded) > 0):
-    targetGeom = geocode.geoCodedToGeoDF(geocoded)
+if(targetGeom is None):
+    geocoded = gc.geocodeInputs()
+    if (len(geocoded) > 0):
+        targetGeom = geocode.geoCodedToGeoDF(geocoded)
+        geocode.saveToFile(targetGeom)
     print('\nFinished geocoding.\n')
 
+if(len(targetGeom.index) > 0):
     target_info = mtrx.targets_ykr_ids(targetGeom, 'name')
     tt_dfs = mtrx.get_tt_between_targets(target_info, 'data/HelsinkiTravelTimeMatrix2018/')
     target_perms = rtts.get_target_permutations(tt_dfs)
