@@ -40,3 +40,16 @@ def geocode(search_word):
     print('with confidence:', round(props['confidence'],2))
     
     return {'coords': geom['coordinates'], 'place': props['label'], 'confidence': round(props['confidence'],3), 'search_word': search_word}
+
+def geoCodedToGeoDF(geocode_results):
+    names = []
+    addresses = []
+    points = []
+    for geocoded in geocode_results:
+        names.append(geocoded['name'])
+        points.append(Point(geocoded['coords']))
+        addresses.append(geocoded['search_word'])
+    geodf = gpd.GeoDataFrame(data={'name': names, 'address': addresses, 'geometry': points}, crs=from_epsg(4326))
+    print('\nGeocoded:')
+    print(geodf)
+    return geodf
