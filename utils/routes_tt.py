@@ -50,19 +50,14 @@ def askOrigDest(target_info):
             break
         else:
             print('invalid destination name')
-
     return { 'orig': orig, 'dest': dest }
 
 def get_best_routes(all_ttimes_summary, origin, target):
     summary_df = all_ttimes_summary.copy()
     if (origin != ''):
         summary_df = summary_df.loc[summary_df['orig_name'] == origin]
-    else:
-        print('no origin defined...')
     if (target != ''):
         summary_df = summary_df.loc[summary_df['dest_name'] == target]
-    else:
-        print('no destination defined...')
     # order routes by total travel time
     best_routes = summary_df.sort_values(by='tot_ttime', ascending=True).reset_index(drop=True)
     return best_routes
@@ -71,7 +66,7 @@ def print_route(route, target_info, idx):
     ykr_ids = route['perm']
     ttimes = route['ttimes']
     # print targets (and travel times) in best order
-    print(str(idx+1) +'. Route: '+ str(route['tot_ttime']) +' min:')
+    print('Route '+ str(idx+1) +': '+ str(route['tot_ttime']) +' min:')
     for idx, ykr_id in enumerate(ykr_ids):
         name = target_info[ykr_id]['name']
         address = target_info[ykr_id]['address']
