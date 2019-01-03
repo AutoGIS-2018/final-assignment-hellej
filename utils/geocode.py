@@ -55,33 +55,33 @@ def geoCodedToGeoDF(geocode_results):
     print(geodf)
     return geodf
 
-def loadInputShapefiles():
-    shapefiles = glob.glob('input/*.shp')
-    if (len(shapefiles) > 0):
-        print('\nExisting locations (.shp) in the foldedr:')
-        for idx, shapefile in enumerate(shapefiles):
-            print(' ['+ str(idx+1) +']: '+ shapefile)
-        print('Do you want to import one of the above files? y/n: ', end='')
-        b_import_file = input().lower()
-        if (b_import_file == 'y'):
-            while True:
-                print('specify file number to import (1,2,3...): ', end='')
-                file_num = int(input())
-                try:
-                    file_path = shapefiles[file_num-1]
-                    read_file = gpd.read_file(file_path)
-                    print('\nSuccessfully loaded file:')
-                    print(read_file)
-                    return read_file
-                except:
-                    print('invalid number...')
-                    continue
-
-def saveToFile(targetGeom):
+def geocodeInputs():
+    print('\nStarting geocoder.')
+    print('You can finish geocoding any time by typing "q" and pressing enter.')
+    geocoded = []
     while True:
-        print('\nSpecify a file name for saving the locations: ', end='')
-        filename = input()
-        if (filename == ''):
+        print('\nWrite the search word or address to geocode or "q" to proceed: ', end='')
+        search_word = input().lower()
+        if(search_word == 'q'):
+            break
+        if(search_word == ''):
             continue
-        targetGeom.to_file('input/'+filename+'.shp')
-        break
+        result = geocode(search_word)
+        while True:
+            print('Are you happy with the geocoding result? y/n: ', end='')
+            geocode_ok = input().lower()
+            if(geocode_ok == 'y'):
+                while True:
+                    print('Give a short name for the place: ', end='')
+                    name = input()
+                    if (name == ''):
+                        continue
+                    result['name'] = name
+                    geocoded.append(result)
+                    break
+                break
+            elif(geocode_ok == 'n'):
+                break
+            else:
+                continue
+    return geocoded

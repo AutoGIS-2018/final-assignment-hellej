@@ -7,13 +7,10 @@ def targets_ykr_ids(targets, name):
     # reproject targets to grid CRS
     if (targets.crs != grid.crs):
         targets = targets.to_crs(grid.crs)
-    
     # CRS should now match
     print('\nExtract YKR ids for targets...\nCRS match:', targets.crs == grid.crs)
-
     # join ykr grid info to targets
     targets_ykr = gpd.sjoin(targets, grid, how="inner", op="within")
-
     # gather target info to dictionary (ykr_id : name)
     target_info = {}
     for target in targets_ykr.itertuples(index=True, name='Pandas'):

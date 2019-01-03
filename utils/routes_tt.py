@@ -19,7 +19,6 @@ def get_all_ttimes(target_perms, tt_dfs):
                 ttime = target_df.loc[target_df['from_id'] == from_id].iloc[0]['pt_m_t']
                 perm_times.append(ttime)
         all_perm_times.append(perm_times)
-
     perms_times = pd.DataFrame(data={'perm': target_perms, 'ttimes': all_perm_times })
     return perms_times
 
@@ -43,7 +42,6 @@ def get_best_routes(all_ttimes_summary, origin, target):
         summary_df = summary_df.loc[summary_df['dest_name'] == target]
     else:
         print('no destination defined...')
-    
     # order routes by total travel time
     best_routes = summary_df.sort_values(by='tot_ttime', ascending=True).reset_index(drop=True)
     best_routes = best_routes[:5]
@@ -69,7 +67,6 @@ def print_best_route_info(best_routes, target_info):
     if (count_best_routes > 1):
         print('\nFound multiple best routes ('+ str(count_best_routes) +'):')
     elif (count_best_routes == 1):
-        print('\nFound best routes:')
-
+        print('\nFound following best routes:')
     for idx, route in best_routes[:4].iterrows():
         print_route(route, target_info, idx)

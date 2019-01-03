@@ -1,16 +1,16 @@
-import geocoder as gc
-import utils.geocode as geocode
+import utils.geocode as gc
 import utils.matrix as mtrx
 import utils.routes_tt as rtts
+import utils.utils as utils
 
-targetGeom = geocode.loadInputShapefiles()
+targetGeom = utils.loadInputShapefile('input/')
 
 if(targetGeom is None):
     geocoded = gc.geocodeInputs()
     if (len(geocoded) > 0):
-        targetGeom = geocode.geoCodedToGeoDF(geocoded)
-        geocode.saveToFile(targetGeom)
-    print('\nFinished geocoding.\n')
+        targetGeom = gc.geoCodedToGeoDF(geocoded)
+        utils.saveToShapefile(targetGeom, 'input/')
+    print('\nFinished geocoding.')
 
 if(len(targetGeom.index) > 0):
     target_info = mtrx.targets_ykr_ids(targetGeom, 'name')
