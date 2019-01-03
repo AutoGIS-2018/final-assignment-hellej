@@ -30,15 +30,36 @@ def calculate_total_ttimes(perms_ttimes, target_info):
     perms_ttimes['tot_ttime'] = [sum(ttimes) for ttimes in perms_ttimes['ttimes']]
     return perms_ttimes
 
+def askOrigDest(target_info):
+    print('\nSelect origin and destination from ', end='')
+    locnames = []
+    for target in target_info.values():
+        locnames.append(target['name'])
+    print(locnames)
+    while True:
+        print('type origin name (or leave empty): ', end='')
+        orig = input()
+        if (orig in locnames or orig == ''):
+            break
+        else:
+            print('invalid origin name')
+    while True:
+        print('type destination name (or leave empty): ', end='')
+        dest = input()
+        if (dest in locnames or dest == ''):
+            break
+        else:
+            print('invalid destination name')
+
+    return { 'orig': orig, 'dest': dest }
+
 def get_best_routes(all_ttimes_summary, origin, target):
     summary_df = all_ttimes_summary.copy()
     if (origin != ''):
-        print('origin defined:', origin)
         summary_df = summary_df.loc[summary_df['orig_name'] == origin]
     else:
         print('no origin defined...')
     if (target != ''):
-        print('destination defined:', target)
         summary_df = summary_df.loc[summary_df['dest_name'] == target]
     else:
         print('no destination defined...')

@@ -16,7 +16,6 @@ def targets_ykr_ids(targets, name, address):
     for target in targets_ykr.itertuples(index=True, name='Pandas'):
         ykr_id = getattr(target, 'YKR_ID')
         target_info[ykr_id] = {'name': getattr(target, name), 'address': getattr(target, address)}
-    print('target info:', target_info)
     return target_info
 
 def get_filepaths_to_tt_files(ykr_ids, folder):
