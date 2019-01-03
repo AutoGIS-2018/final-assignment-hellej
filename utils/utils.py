@@ -26,8 +26,8 @@ def loadInputShapefile(folder):
                     try:
                         file_path = shapefiles[file_num-1]
                         read_file = gpd.read_file(file_path)
-                        print('\nSuccessfully loaded loacations:')
-                        print(read_file)
+                        print('\nSuccessfully loaded locations:')
+                        print(read_file[['name', 'address']])
                         return read_file
                     except:
                         print('invalid number...')

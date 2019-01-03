@@ -50,14 +50,14 @@ def print_route(route, target_info, idx):
     ykr_ids = route['perm']
     ttimes = route['ttimes']
     # print targets (and travel times) in best order
-    print(str(idx+1) +'. route: '+ str(route['tot_ttime']) +' min:')
+    print(str(idx+1) +'. Route: '+ str(route['tot_ttime']) +' min:')
     for idx, ykr_id in enumerate(ykr_ids):
         name = target_info[ykr_id]['name']
         address = target_info[ykr_id]['address']
         minutes = ''
         if (idx > 0):
             minutes = ' ('+ str(ttimes[idx-1]) +' min)'
-        print(' '+str(idx+1)+'. '+ name +': '+ address + minutes)
+        print('  '+str(idx+1)+'. '+ name +': '+ address + minutes)
 
 def print_best_route_info(best_routes, target_info):
     # get min travel time
@@ -67,7 +67,7 @@ def print_best_route_info(best_routes, target_info):
     if (count_best_routes > 1):
         print('\nFound multiple best routes ('+ str(count_best_routes) +'):')
     elif (count_best_routes == 1):
-        print('\nFound following best routes:')
+        print('\nFound the following best routes:')
     for idx, route in best_routes[:8].iterrows():
         print_route(route, target_info, idx)
     print('\n')
