@@ -3,7 +3,7 @@ import geopandas as gpd
 
 grid = gpd.read_file('data/MetropAccessGrid/MetropAccess_YKR_grid_EurefFIN.shp')
 
-def targets_ykr_ids(targets, name):
+def targets_ykr_ids(targets, name, address):
     # reproject targets to grid CRS
     if (targets.crs != grid.crs):
         targets = targets.to_crs(grid.crs)
@@ -15,7 +15,7 @@ def targets_ykr_ids(targets, name):
     target_info = {}
     for target in targets_ykr.itertuples(index=True, name='Pandas'):
         ykr_id = getattr(target, 'YKR_ID')
-        target_info[ykr_id] = getattr(target, name)
+        target_info[ykr_id] = {'name': getattr(target, name), 'address': getattr(target, address)}
     print('target info:', target_info)
     return target_info
 

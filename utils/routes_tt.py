@@ -24,9 +24,9 @@ def get_all_ttimes(target_perms, tt_dfs):
 
 def calculate_total_ttimes(perms_ttimes, target_info):
     perms_ttimes['orig_id'] = [perm[0] for perm in perms_ttimes['perm']]
-    perms_ttimes['orig_name'] = [target_info[perm[0]] for perm in perms_ttimes['perm']]
+    perms_ttimes['orig_name'] = [target_info[perm[0]]['name'] for perm in perms_ttimes['perm']]
     perms_ttimes['dest_id'] = [perm[len(perm)-1] for perm in perms_ttimes['perm']]
-    perms_ttimes['dest_name'] = [target_info[perm[len(perm)-1]] for perm in perms_ttimes['perm']]
+    perms_ttimes['dest_name'] = [target_info[perm[len(perm)-1]]['name'] for perm in perms_ttimes['perm']]
     perms_ttimes['tot_ttime'] = [sum(ttimes) for ttimes in perms_ttimes['ttimes']]
     return perms_ttimes
 
@@ -53,11 +53,12 @@ def print_route(route, target_info, idx):
     # print targets (and travel times) in best order
     print(str(idx+1) +'. route: '+ str(route['tot_ttime']) +' min:')
     for idx, ykr_id in enumerate(ykr_ids):
-        name = target_info[ykr_id]
+        name = target_info[ykr_id]['name']
+        address = target_info[ykr_id]['address']
         minutes = ''
         if (idx > 0):
             minutes = ' ('+ str(ttimes[idx-1]) +' min)'
-        print(' '+str(idx+1)+'. '+ name + minutes)
+        print(' '+str(idx+1)+'. '+ name +': '+ address + minutes)
 
 def print_best_route_info(best_routes, target_info):
     # get min travel time

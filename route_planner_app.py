@@ -13,7 +13,7 @@ if(targetGeom is None):
     print('\nFinished geocoding.')
 
 if(len(targetGeom.index) > 0):
-    target_info = mtrx.targets_ykr_ids(targetGeom, 'name')
+    target_info = mtrx.targets_ykr_ids(targetGeom, 'name', 'address')
     tt_dfs = mtrx.get_tt_between_targets(target_info, 'data/HelsinkiTravelTimeMatrix2018/')
     target_perms = rtts.get_target_permutations(tt_dfs)
     perms_ttimes = rtts.get_all_ttimes(target_perms, tt_dfs)
