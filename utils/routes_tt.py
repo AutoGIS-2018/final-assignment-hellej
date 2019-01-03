@@ -44,7 +44,6 @@ def get_best_routes(all_ttimes_summary, origin, target):
         print('no destination defined...')
     # order routes by total travel time
     best_routes = summary_df.sort_values(by='tot_ttime', ascending=True).reset_index(drop=True)
-    best_routes = best_routes[:5]
     return best_routes
 
 def print_route(route, target_info, idx):
@@ -69,5 +68,6 @@ def print_best_route_info(best_routes, target_info):
         print('\nFound multiple best routes ('+ str(count_best_routes) +'):')
     elif (count_best_routes == 1):
         print('\nFound following best routes:')
-    for idx, route in best_routes[:4].iterrows():
+    for idx, route in best_routes[:8].iterrows():
         print_route(route, target_info, idx)
+    print('\n')

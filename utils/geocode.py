@@ -16,22 +16,17 @@ def getGeocodeRequest(search_word):
 
 def geocode(search_word):
     # print('geocoding:', search_word)
-    
     request = getGeocodeRequest(search_word)
     # print('request:', request)
-
     # execute API call
     georeq = requests.get(request)
-    
     # print('JSON:', georeq.text)
     # parse result from json to python dictionary
     parsed_result = json.loads(georeq.text)
-    
     # extract geocoded feature (GeoJSON)
     feat = parsed_result['features'][0]
     geom = feat['geometry']
     props = feat['properties']
-    
     print('found:', props['label'])
     print('at:', geom['coordinates'])
     try:
@@ -39,7 +34,6 @@ def geocode(search_word):
     except:
         pass
     print('with confidence:', round(props['confidence'],2))
-    
     return {'coords': geom['coordinates'], 'place': props['label'], 'confidence': round(props['confidence'],3), 'search_word': search_word}
 
 def geoCodedToGeoDF(geocode_results):
