@@ -14,10 +14,12 @@ if(targetGeom is None):
 
 if(len(targetGeom.index) > 0):
     target_info = mtrx.targets_ykr_ids(targetGeom, 'name', 'address')
-    tt_dfs = mtrx.get_tt_between_targets(target_info, 'data/HelsinkiTravelTimeMatrix2018/')
-    target_perms = rtts.get_target_permutations(tt_dfs)
-    perms_ttimes = rtts.get_all_ttimes(target_perms, tt_dfs)
-    all_ttimes_summary = rtts.calculate_total_ttimes(perms_ttimes, target_info)
-    route_params = rtts.askOrigDest(target_info)
-    best_routes = rtts.get_best_routes(all_ttimes_summary, route_params['orig'], route_params['dest'])
-    rtts.print_best_route_info(best_routes, target_info)
+    if (target_info is not None):
+        tt_dfs = mtrx.get_tt_between_targets(target_info, 'data/HelsinkiTravelTimeMatrix2018/')
+        if(tt_dfs is not None):
+            target_perms = rtts.get_target_permutations(tt_dfs)
+            perms_ttimes = rtts.get_all_ttimes(target_perms, tt_dfs)
+            all_ttimes_summary = rtts.calculate_total_ttimes(perms_ttimes, target_info)
+            route_params = rtts.askOrigDest(target_info)
+            best_routes = rtts.get_best_routes(all_ttimes_summary, route_params['orig'], route_params['dest'])
+            rtts.print_best_route_info(best_routes, target_info)
