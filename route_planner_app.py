@@ -11,11 +11,14 @@ if(targetGeom is None):
         targetGeom = gc.geoCodedToGeoDF(geocoded)
         utils.saveToShapefile(targetGeom, 'input/')
     print('\nFinished geocoding.')
+# ask wether travel time matrix or Digitransit API should be usod to obtain travel time information
+matrix_or_digitransit = utils.getUserInput('\nDo you want to extract travel times from travel time matrix or Digitransit API? "matrix"/"digitransit": ', ['matrix', 'digitransit'], '').lower()
+digitransit = True if matrix_or_digitransit == 'digitransit' else False
 
 if(len(targetGeom.index) > 0):
-    target_info = tts.gather_target_info(targetGeom, 'name', 'address', False)
+    target_info = tts.gather_target_info(targetGeom, 'name', 'address', digitransit)
     if (target_info is not None):
-        tts_dict = tts.get_tt_between_targets(target_info, 'data/HelsinkiTravelTimeMatrix2018/', False)
+        tts_dict = tts.get_tt_between_targets(target_info, 'data/HelsinkiTravelTimeMatrix2018/', digitransit)
         if(tts_dict is not None):
             target_perms = rtts.get_target_permutations(tts_dict)
             perms_ttimes = rtts.get_all_ttimes(target_perms, tts_dict)
