@@ -18,6 +18,7 @@ Set up the python environment with the following commands:
 $ conda create -n geoenv -c conda-forge python=3.6.5 jupyterlab geopandas geoplot osmnx pysal contextily
 $ pip install pycrs
 $ pip install requests
+$ pip install polyline
 ```
 Add the [travel time matrix](https://blogs.helsinki.fi/accessibility/helsinki-region-travel-time-matrix-2018/)
  to the path `/data/HelsinkiTravelTimeMatrix2018`
@@ -36,8 +37,9 @@ $ python route_planner_app.py
   │   ├── HelsinkiTravelTimeMatrix2018/     
   │   └── MetropAccessGrid/ *.shp
   ├── demo
-  │   ├── geocode.py                # Jupyter notebook like demo script to run with VSCode
-  │   ├── optimize_route.py         # Jupyter notebook like demo script to run with VSCode
+  │   ├── dt_geocode.py             # Jupyter notebook like script file to run with VSCode
+  │   ├── dt_routing.py             # Jupyter notebook like script file to run with VSCode
+  │   ├── optimize_route.py         # Jupyter notebook like script file to run with VSCode
   │   └── route-optim-outputs.md    # Outputs of example runs
   ├── input
   │   └── *.shp                     # Optional locations to use in multi-stop route optimization
