@@ -45,6 +45,7 @@ $ python route_planner_app.py
   │   └── *.shp                     # Optional locations to use in multi-stop route optimization
   ├── utils                         # Utils-module
   │   ├── dt_geocode.py             # Utilization of Digitransit Geocoding API
+  │   ├── dt_routing.py             # Utilization of Digitransit Routing API
   │   ├── matrix.py                 # Extracting travel times from travel time matrixes
   │   ├── routes_tt.py              # Forming and comparing multi-stop route options
   │   └── utils.py                  # General utilities
