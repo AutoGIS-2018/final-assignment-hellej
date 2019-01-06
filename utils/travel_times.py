@@ -2,6 +2,7 @@ import pandas as pd
 import geopandas as gpd
 import utils.dt_routing as dt_rt
 from fiona.crs import from_epsg
+import sys
 
 grid = gpd.read_file('data/MetropAccessGrid/MetropAccess_YKR_grid_EurefFIN.shp')
 
@@ -52,8 +53,12 @@ def get_filepath_to_tt_file(ykr_id, folder):
 def get_tt_between_targets(target_info, folder, digitransit):
     target_ids = target_info.keys()
     tts = {}
-    for to_id in target_ids:
+    sys.stdout.write('querying travel times to targets: ')
+    sys.stdout.flush()
+    for idx, to_id in enumerate(target_ids):
         if (digitransit == True):
+            sys.stdout.write(str(idx+1)+'/'+str(len(target_ids))+' ')
+            sys.stdout.flush()
             try:
                 to_tts = {}
                 for from_id in target_ids:
