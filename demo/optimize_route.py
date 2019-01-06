@@ -3,7 +3,7 @@
 
 #%%
 import geopandas as gpd
-import utils.matrix as mtrx
+import utils.travel_times as tts
 import utils.routes_tt as rtts
 
 #%%
@@ -14,20 +14,20 @@ target_points = large_cinemas[:3]
 
 #%%
 # get and gather target_info (ykr_ids, names & addresses)
-target_info = mtrx.targets_ykr_ids(target_points, 'name', 'address_y')
+target_info = tts.targets_ykr_ids(target_points, 'name', 'address_y')
 print(target_info)
 
 #%%
 # read and gather only relevant travel time dataframes to a dictionary
-tts = mtrx.get_tt_between_targets(target_info, 'data/HelsinkiTravelTimeMatrix2018/')
+tts_dict = tts.get_tt_between_targets(target_info, 'data/HelsinkiTravelTimeMatrix2018/', False)
 
 #%%
 # find and collect all possible route options
-target_perms = rtts.get_target_permutations(tts)
+target_perms = rtts.get_target_permutations(tts_dict)
 
 #%%
 # extract and collect travel times between stops for all route options
-perms_ttimes = rtts.get_all_ttimes(target_perms, tts)
+perms_ttimes = rtts.get_all_ttimes(target_perms, tts_dict)
 
 #%%
 # calculate total travel times for all route options
