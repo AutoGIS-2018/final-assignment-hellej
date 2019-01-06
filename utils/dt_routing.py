@@ -88,5 +88,5 @@ def get_mean_travel_time(coords_from, coords_to, walkSpeed, maxWalkDistance):
     duration_sum = 0
     for itin in itineraries:
         duration_sum += itin['duration']
-    mean_tt_min = int(round(duration_sum/len(itineraries)))
+    mean_tt_min = int(round((duration_sum/len(itineraries))/60))
     return mean_tt_min

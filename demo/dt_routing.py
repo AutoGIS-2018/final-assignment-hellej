@@ -26,3 +26,5 @@ itin['line_geom']
 # get only travel time
 tt = routing.get_mean_travel_time(coords_from, coords_to, walkSpeed, maxWalkDistance)
 print(tt)
+
+#%%

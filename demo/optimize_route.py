@@ -6,6 +6,8 @@ import geopandas as gpd
 import utils.travel_times as tts
 import utils.routes_tt as rtts
 
+digitransit = False
+
 #%%
 # read and filter test data (cinemas as stops)
 cinemas = gpd.read_file('data/temp/cinemas.shp')
@@ -14,12 +16,12 @@ target_points = large_cinemas[:3]
 
 #%%
 # get and gather target_info (ykr_ids, names & addresses)
-target_info = tts.targets_ykr_ids(target_points, 'name', 'address_y')
+target_info = tts.gather_target_info(target_points, 'name', 'address_y', digitransit)
 print(target_info)
 
 #%%
 # read and gather only relevant travel time dataframes to a dictionary
-tts_dict = tts.get_tt_between_targets(target_info, 'data/HelsinkiTravelTimeMatrix2018/', False)
+tts_dict = tts.get_tt_between_targets(target_info, 'data/HelsinkiTravelTimeMatrix2018/', digitransit)
 
 #%%
 # find and collect all possible route options
