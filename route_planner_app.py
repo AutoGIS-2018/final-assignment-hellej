@@ -1,16 +1,60 @@
+from functools import reduce
+import glob
 import utils.dt_geocode as gc
 import utils.travel_times as tts
 import utils.routes_tt as rtts
 import utils.utils as utils
+import geopandas as gpd
 
-targetGeom = utils.loadInputShapefile('input/')
+targetGeom = None
 
+# list existing shapefiles and ask if one of them should be imported
+shp_list = glob.glob('input/*.shp')
+if (len(shp_list) > 0):
+    print('\nExisting locations (.shp) in the foldedr:')
+    shape_nums = []
+    for idx, shapefile in enumerate(shp_list):
+        print(' ['+ str(idx+1) +']: '+ shapefile)
+        shape_nums.append(str(idx+1))
+    b_import_file = utils.getUserInput('Do you want to import one of the above files? y/n: ', ['y', 'n'], '').lower()
+    if (b_import_file == 'y'):
+        file_num = int(utils.getUserInput('Specify file number to import '+ str(shape_nums) +': ', shape_nums, 'Invalid number'))
+        targetGeom = gpd.read_file(shp_list[file_num-1])
+        print('\nSuccessfully loaded locations:')
+        print(targetGeom[['name', 'address']])
+
+# ask and geocode inputs if shapefile was not imported
 if(targetGeom is None):
-    geocoded = gc.geocodeInputs()
+    print('\nStarting geocoder.')
+    geocoded = []
+    while True:
+        print('\nWrite the search word or address to geocode or "q" to proceed: ', end='')
+        search_word = input().lower()
+        if(search_word == 'q'):
+            break
+        if(search_word == ''):
+            continue
+        result = gc.geocode(search_word)
+        b_geocode_ok = utils.getUserInput('Are you happy with the geocoding result? y/n: ', ['y', 'n'], '').lower()
+        if(b_geocode_ok == 'y'):
+            while True:
+                print('Give a short name for the place: ', end='')
+                name = input()
+                if (name == ''):
+                    continue
+                result['name'] = name
+                geocoded.append(result)
+                break
+            continue
+        elif(b_geocode_ok == 'n'):
+            continue
+    # export geocoded locations to shapefile (if any)
     if (len(geocoded) > 0):
         targetGeom = gc.geoCodedToGeoDF(geocoded)
-        utils.saveToShapefile(targetGeom, 'input/')
-    print('\nFinished geocoding.')
+        filename = utils.getUserInput('\nSpecify a file name for saving the locations: ', [], '')
+        targetGeom.to_file('input/'+filename+'.shp')
+        print('\nFinished geocoding.')
+
 # ask wether travel time matrix or Digitransit API should be usod to obtain travel time information
 matrix_or_digitransit = utils.getUserInput('\nDo you want to extract travel times from travel time matrix or Digitransit API? "matrix"/"digitransit": ', ['matrix', 'digitransit'], '').lower()
 digitransit = True if matrix_or_digitransit == 'digitransit' else False
@@ -23,6 +67,10 @@ if(len(targetGeom.index) > 0):
             target_perms = rtts.get_target_permutations(tts_dict)
             perms_ttimes = rtts.get_all_ttimes(target_perms, tts_dict)
             all_ttimes_summary = rtts.calculate_total_ttimes(perms_ttimes, target_info)
-            route_params = rtts.askOrigDest(target_info)
-            best_routes = rtts.get_best_routes(all_ttimes_summary, route_params['orig'], route_params['dest'])
+            print('\nSelect origin and destination from ', end='')
+            stopnames = [target['name'] for target in target_info.values()]
+            print(stopnames)
+            origin = utils.getUserInput('type origin name (or leave empty): ', stopnames + [''], 'invalid stop name')
+            destination = utils.getUserInput('type destination name (or leave empty): ', stopnames + [''], 'invalid stop name')
+            best_routes = rtts.get_best_routes(all_ttimes_summary, origin, destination)
             rtts.print_best_route_info(best_routes, target_info)

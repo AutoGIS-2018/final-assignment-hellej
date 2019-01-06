@@ -86,4 +86,3 @@ def print_best_route_info(best_routes, target_info):
         print('\nFound the following best routes:')
     for idx, route in best_routes[:8].iterrows():
         print_route(route, target_info, idx)
-    print('\n')
