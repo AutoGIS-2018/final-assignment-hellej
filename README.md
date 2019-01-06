@@ -1,14 +1,11 @@
-# Final Assignment
 Read the final assignment instructions from the [https://autogis.github.io](https://automating-gis-processes.github.io/2018/lessons/FA/final-assignment.html).
-
-You should upload all your code(s) / notebook(s) into this repository and write a **good documentation** how everything works.
 
 # Multi-Stop Route Optimizer Tool
 ## Introduction
 This program can be used to solve multi-stop route optimization problem by minimizing total travel time. The implementation is a command line interface/tool that will read all necessary user inputs (such as addresses of the stops) from keyboard. Travel times are extracted from [Helsinki Region Travel Time Matrix 2018](https://blogs.helsinki.fi/accessibility/helsinki-region-travel-time-matrix-2018/). 
 
 ## Usage
-First, the program geocodes user defined locations by using [Digitransit Geocoding API](https://digitransit.fi/en/developers/apis/2-geocoding-api/). Geocoded locations are saved as a shapefile and can be imported to the program on a later run (instead of geocoding new locations). After user has accepted the geocoding results, the program proceeds to find all possible combinations (permutations) of stops. Subsequently, total travel times of all stop-combinations are extracted and combined from the travel time matrix. Optionally, user can define fixed origin and/or destination. Finally, best routes are selected and printed. 
+First, the program geocodes user defined locations by using [Digitransit Geocoding API](https://digitransit.fi/en/developers/apis/2-geocoding-api/). Geocoded locations are saved as a shapefile and can be imported to the program on a later run (instead of geocoding new locations). After user has accepted the geocoding results, the program proceeds to find all possible combinations (permutations) of stops. Subsequently, total travel times of all stop-combinations are extracted and combined from either the travel time matrix or [Digitransit Routing API](https://digitransit.fi/en/developers/apis/1-routing-api/). Optionally, user can define fixed origin and/or destination. Finally, best routes are selected and printed. 
 
 [See some example runs from here.](demo/route-optim-outputs.md)
 
@@ -26,8 +23,8 @@ Add the [travel time matrix](https://blogs.helsinki.fi/accessibility/helsinki-re
 ## Starting the program
 ```
 $ git clone git@github.com:AutoGIS-2018/final-assignment-hellej.git
-$ cd final-assignment-hellej
 $ conda activate geoenv
+$ cd final-assignment-hellej
 $ python route_planner_app.py
 ```
 
