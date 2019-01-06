@@ -46,8 +46,8 @@ $ python route_planner_app.py
   ├── utils                         # Utils-module
   │   ├── dt_geocode.py             # Utilization of Digitransit Geocoding API
   │   ├── dt_routing.py             # Utilization of Digitransit Routing API
-  │   ├── matrix.py                 # Extracting travel times from travel time matrixes
   │   ├── routes_tt.py              # Forming and comparing multi-stop route options
+  │   ├── travel_times.py           # Collecting travel times from travel time matrixes or Digitransit API
   │   └── utils.py                  # General utilities
   │── demo_geocoding.ipynb
   │── demo_route_optim.ipynb
