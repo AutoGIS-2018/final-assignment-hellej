@@ -26,24 +26,25 @@ def targets_ykr_ids(targets, name, address):
         target_info[ykr_id] = {'name': getattr(target, name), 'address': getattr(target, address)}
     return target_info
 
-def get_filepaths_to_tt_files(ykr_ids, folder):
-    filepaths = {}
-    for ykr_id in ykr_ids:
-        subfolder = str(ykr_id)[:4]+'xxx/'
-        filename = 'travel_times_to_ '+ str(ykr_id) +'.txt'
-        path = folder + subfolder + filename
-        filepaths[ykr_id] = path
-    return filepaths
+def get_filepath_to_tt_file(ykr_id, folder):
+    subfolder = str(ykr_id)[:4]+'xxx/'
+    filename = 'travel_times_to_ '+ str(ykr_id) +'.txt'
+    file_path = folder + subfolder + filename
+    return file_path
 
 def get_tt_between_targets(target_info, folder):
-    filepaths = get_filepaths_to_tt_files(target_info.keys(), folder)
-    tt_dfs = {}
-    for ykr_id in filepaths:
+    ykr_ids = target_info.keys()
+    tts = {}
+    for to_id in ykr_ids:
         try:
-            data = pd.read_csv(filepaths[ykr_id], sep=';')
-            data = data[['from_id', 'to_id', 'pt_m_t']]
-            tt_dfs[ykr_id] = data
+            filepath = get_filepath_to_tt_file(to_id, folder)
+            tts_df = pd.read_csv(filepath, sep=';')
+            to_tts = {}
+            for from_id in ykr_ids:
+                from_tt = tts_df.loc[tts_df['from_id'] == from_id].iloc[0]['pt_m_t']
+                to_tts[from_id] = from_tt
+            tts[to_id] = to_tts
         except:
-            print('\nError: no travel time file found for: '+ (target_info[ykr_id]['name'])+'.\n')
+            print('\nError: no travel time file found for: '+ (target_info[to_id]['name'])+'.\n')
             return
-    return tt_dfs
+    return tts

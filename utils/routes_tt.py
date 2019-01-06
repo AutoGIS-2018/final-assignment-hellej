@@ -8,16 +8,16 @@ def get_target_permutations(tt_dfs):
     print('found', len(to_ids_perms), 'route options')
     return to_ids_perms
 
-def get_all_ttimes(target_perms, tt_dfs):
+def get_all_ttimes(target_perms, tts_all):
     all_perm_times = []
     for target_perm in target_perms:
         perm_times = []
         for idx, target_id in enumerate(target_perm):
             if (idx > 0):
                 from_id = target_perm[idx-1]
-                target_df = tt_dfs[target_id]
-                ttime = target_df.loc[target_df['from_id'] == from_id].iloc[0]['pt_m_t']
-                perm_times.append(ttime)
+                tts_target = tts_all[target_id]
+                from_tt = tts_target[from_id]
+                perm_times.append(from_tt)
         all_perm_times.append(perm_times)
     perms_times = pd.DataFrame(data={'perm': target_perms, 'ttimes': all_perm_times })
     return perms_times

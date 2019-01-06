@@ -9,8 +9,8 @@ import utils.routes_tt as rtts
 #%%
 # read and filter test data (cinemas as stops)
 cinemas = gpd.read_file('data/temp/cinemas.shp')
-large_cinemas = cinemas.loc[cinemas['rooms'] > 1]
-target_points = large_cinemas[:7]
+large_cinemas = cinemas.loc[cinemas['rooms'] > 2]
+target_points = large_cinemas[:3]
 
 #%%
 # get and gather target_info (ykr_ids, names & addresses)
@@ -19,15 +19,15 @@ print(target_info)
 
 #%%
 # read and gather only relevant travel time dataframes to a dictionary
-tt_dfs = mtrx.get_tt_between_targets(target_info, 'data/HelsinkiTravelTimeMatrix2018/')
+tts = mtrx.get_tt_between_targets(target_info, 'data/HelsinkiTravelTimeMatrix2018/')
 
 #%%
 # find and collect all possible route options
-target_perms = rtts.get_target_permutations(tt_dfs)
+target_perms = rtts.get_target_permutations(tts)
 
 #%%
 # extract and collect travel times between stops for all route options
-perms_ttimes = rtts.get_all_ttimes(target_perms, tt_dfs)
+perms_ttimes = rtts.get_all_ttimes(target_perms, tts)
 
 #%%
 # calculate total travel times for all route options
