@@ -1,22 +1,21 @@
-
-## With Geocoding
+## With geocoding
 ```
-(geoenv) Jooses-MBP:final-assignment-hellej joose$ python route_planner_app.py 
+(geoenv) Jooses-MacBook-Pro:final-assignment-hellej joose$ python route_planner_app.py 
 
 Existing locations (.shp) in the foldedr:
  [1]: input/stadissa.shp
- [2]: input/serkut.shp
+ [2]: input/outside.shp
+ [3]: input/serkut.shp
 Do you want to import one of the above files? y/n: n
 
 Starting geocoder.
-You can finish geocoding any time by typing "q" and pressing enter.
 
 Write the search word or address to geocode or "q" to proceed: juhana herttuan tie 3
 found: Juhana Herttuan tie 3, Helsinki
 at: [24.969732, 60.217748]
 from neighbourhood: Koskela
 with confidence: 1
-Are you happy with the geocoding result? y/n: y 
+Are you happy with the geocoding result? y/n: y
 Give a short name for the place: Koskela
 
 Write the search word or address to geocode or "q" to proceed: ruukinlahdentie 3
@@ -45,10 +44,10 @@ Give a short name for the place: Okko
 
 Write the search word or address to geocode or "q" to proceed: teollisuuskatu 18
 found: Teollisuuskatu 18, Helsinki
-at: [24.945241, 60.194756]
+at: [24.944845, 60.194894]
 from neighbourhood: Vallila
 with confidence: 1
-Are you happy with the geocoding result? y/n: y 
+Are you happy with the geocoding result? y/n: y
 Give a short name for the place: Iitu
 
 Write the search word or address to geocode or "q" to proceed: q
@@ -59,15 +58,17 @@ Geocoded:
 1     Ellu      ruukinlahdentie 3   POINT (24.872825 60.16198)
 2    Ville        kolmas linja 14  POINT (24.948377 60.182609)
 3     Okko   itäinen alppirinne 1  POINT (24.950168 60.185841)
-4     Iitu      teollisuuskatu 18  POINT (24.945241 60.194756)
+4     Iitu      teollisuuskatu 18  POINT (24.944845 60.194894)
 
 Specify a file name for saving the locations: serkut
 
 Finished geocoding.
 
+Do you want to extract travel times from travel time matrix or Digitransit API? "matrix"/"digitransit": matrix
+
 Extract YKR ids for targets...
 CRS match: True
-
+querying travel times to targets: 1/5 2/5 3/5 4/5 5/5 
 Get all possible routes...
 found 120 route options
 
@@ -102,16 +103,16 @@ Route 4: 96 min:
   5. Ville: kolmas linja 14 (7 min)
 ```
 
-
 ## With locations imported from a shapefile
 ```
-(geoenv) Jooses-MBP:final-assignment-hellej joose$ python route_planner_app.py 
+(geoenv) Jooses-MacBook-Pro:final-assignment-hellej joose$ python route_planner_app.py 
 
 Existing locations (.shp) in the foldedr:
  [1]: input/stadissa.shp
- [2]: input/serkut.shp
+ [2]: input/outside.shp
+ [3]: input/serkut.shp
 Do you want to import one of the above files? y/n: y
-specify file number to import (1,2,3...): 2
+Specify file number to import ['1', '2', '3']: 3
 
 Successfully loaded locations:
       name                address
@@ -121,9 +122,11 @@ Successfully loaded locations:
 3     Okko   itäinen alppirinne 1
 4     Iitu      teollisuuskatu 18
 
+Do you want to extract travel times from travel time matrix or Digitransit API? "matrix"/"digitransit": matrix
+
 Extract YKR ids for targets...
 CRS match: True
-
+querying travel times to targets: 1/5 2/5 3/5 4/5 5/5
 Get all possible routes...
 found 120 route options
 
