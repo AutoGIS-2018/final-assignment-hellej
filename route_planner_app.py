@@ -16,9 +16,9 @@ if (len(shp_list) > 0):
     for idx, shapefile in enumerate(shp_list):
         print(' ['+ str(idx+1) +']: '+ shapefile)
         shape_nums.append(str(idx+1))
-    b_import_file = utils.getUserInput('Do you want to import one of the above files? y/n: ', ['y', 'n'], '').lower()
+    b_import_file = utils.getUserInput('Do you want to import one of the above files? y/n: ', ['y', 'n'], False, '').lower()
     if (b_import_file == 'y'):
-        file_num = int(utils.getUserInput('Specify file number to import '+ str(shape_nums) +': ', shape_nums, 'Invalid number'))
+        file_num = int(utils.getUserInput('Specify file number to import '+ str(shape_nums) +': ', shape_nums, False, 'Invalid number'))
         targetGeom = gpd.read_file(shp_list[file_num-1])
         print('\nSuccessfully loaded locations:')
         print(targetGeom[['name', 'address']])
@@ -35,7 +35,7 @@ if(targetGeom is None):
         if(search_word == ''):
             continue
         result = gc.geocode(search_word)
-        b_geocode_ok = utils.getUserInput('Are you happy with the geocoding result? y/n: ', ['y', 'n'], '').lower()
+        b_geocode_ok = utils.getUserInput('Are you happy with the geocoding result? y/n: ', ['y', 'n'], False, '').lower()
         if(b_geocode_ok == 'y'):
             while True:
                 print('Give a short name for the place: ', end='')
@@ -51,12 +51,12 @@ if(targetGeom is None):
     # export geocoded locations to shapefile (if any)
     if (len(geocoded) > 0):
         targetGeom = gc.geoCodedToGeoDF(geocoded)
-        filename = utils.getUserInput('\nSpecify a file name for saving the locations: ', [], '')
+        filename = utils.getUserInput('\nSpecify a file name for saving the locations: ', [], False, '')
         targetGeom.to_file('input/'+filename+'.shp')
         print('\nFinished geocoding.')
 
 # ask wether travel time matrix or Digitransit API should be usod to obtain travel time information
-matrix_or_digitransit = utils.getUserInput('\nDo you want to extract travel times from travel time matrix or Digitransit API? "matrix"/"digitransit": ', ['matrix', 'digitransit'], '').lower()
+matrix_or_digitransit = utils.getUserInput('\nDo you want to extract travel times from travel time matrix or Digitransit API? "matrix"/"digitransit": ', ['matrix', 'digitransit'], False, '').lower()
 digitransit = True if matrix_or_digitransit == 'digitransit' else False
 
 if(len(targetGeom.index) > 0):
@@ -70,7 +70,7 @@ if(len(targetGeom.index) > 0):
             print('\nSelect origin and destination from ', end='')
             stopnames = [target['name'] for target in target_info.values()]
             print(stopnames)
-            origin = utils.getUserInput('type origin name (or leave empty): ', stopnames + [''], 'invalid stop name')
-            destination = utils.getUserInput('type destination name (or leave empty): ', stopnames + [''], 'invalid stop name')
+            origin = utils.getUserInput('type origin name (or leave empty): ', stopnames + [''], True, 'invalid stop name')
+            destination = utils.getUserInput('type destination name (or leave empty): ', stopnames + [''], True, 'invalid stop name')
             best_routes = rtts.get_best_routes(all_ttimes_summary, origin, destination)
             rtts.print_best_route_info(best_routes, target_info)
