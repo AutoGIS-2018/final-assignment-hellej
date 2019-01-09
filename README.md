@@ -14,7 +14,7 @@ First, the program geocodes user defined locations by using [Digitransit Geocodi
 ## Installation
 Set up the python environment with the following commands:
 ```
-$ conda create -n geoenv -c conda-forge python=3.6.5 jupyterlab geopandas geoplot osmnx pysal contextily
+$ conda create -n geoenv -c conda-forge python=3.6.5 jupyterlab geopandas geoplot pysal
 $ pip install pycrs
 $ pip install requests
 $ pip install polyline
@@ -33,7 +33,7 @@ $ python route_planner_app.py
 ## Components
 ``` 
   ├── data
-  │   ├── HelsinkiTravelTimeMatrix2018/     
+  │   ├── HelsinkiTravelTimeMatrix2018/ */ *.txt     
   │   └── MetropAccessGrid/ *.shp
   ├── demo
   │   ├── dt_geocode.py             # Jupyter notebook like script file to run with VSCode
