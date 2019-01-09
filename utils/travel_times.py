@@ -71,6 +71,8 @@ def get_tt_between_targets(target_info, folder, digitransit):
                 print('\nError: no travel time file found for: '+ (target_info[to_id]['name'])+'.\n')
                 return
         if (digitransit == False):
+            sys.stdout.write(str(idx+1)+'/'+str(len(target_ids))+' ')
+            sys.stdout.flush()
             try:
                 filepath = get_filepath_to_tt_file(to_id, folder)
                 tts_df = pd.read_csv(filepath, sep=';')
