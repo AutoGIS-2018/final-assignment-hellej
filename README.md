@@ -2,7 +2,7 @@ Read the final assignment instructions from the [https://autogis.github.io](http
 
 # Multi-Stop Route Optimizer Tool
 ## Introduction
-This final assignment aims to solve a very practical problem that almost everyone is likely to face at some point of their lives. For example, a group of friends is willing to visit each other's homes during one evening (but are uncertain about the optimal sequence) or perhaps you just want to know what is the fastest route to sequentially visit home, a grocery store, a post office and a library... 
+This final assignment aims to solve a very practical problem that almost everyone is likely to face at some point of their lives. For example, a group of friends is willing to visit each other's homes during one evening (but are uncertain about the optimal sequence) or perhaps you just want to know the fastest route to sequentially visit home, a grocery store, a post office and a library... 
 
 This program can be used to solve multi-stop route optimization problem by minimizing total travel time of itineraries. The implementation is a command line interface/tool that will read all necessary user inputs (such as addresses of the stops) from keyboard. Travel times are extracted either from [Helsinki Region Travel Time Matrix 2018](https://blogs.helsinki.fi/accessibility/helsinki-region-travel-time-matrix-2018/) or [Digitransit Routing API](https://digitransit.fi/en/developers/apis/1-routing-api/). 
 
