@@ -52,3 +52,6 @@ $ python route_planner_app.py
   │── demo_route_optim.ipynb
   └── route_planner_app.py          # Main application (run this in terminal)
 ```
+
+## License
+[MIT](LICENSE)
