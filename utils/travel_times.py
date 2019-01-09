@@ -25,9 +25,11 @@ def add_ykr_ids_to_targets(targets):
     return targets_ids
 
 def gather_target_info(targets, name, address, digitransit):
+    # if using Digitransit API use row index as stop id
     if (digitransit == True):
         id_col = 'ROW_ID'
         targets['ROW_ID'] = targets.reset_index().index
+    # if using travel time matrix use ykr id as stop id
     else:
         id_col = 'YKR_ID'
         targets = add_ykr_ids_to_targets(targets)
@@ -45,12 +47,15 @@ def gather_target_info(targets, name, address, digitransit):
     return target_info
 
 def get_filepath_to_tt_file(ykr_id, folder):
+    # combine file path to a travel time file (of travel time matrix)
     subfolder = str(ykr_id)[:4]+'xxx/'
     filename = 'travel_times_to_ '+ str(ykr_id) +'.txt'
     file_path = folder + subfolder + filename
     return file_path
 
 def get_tt_between_targets(target_info, folder, digitransit):
+    # get and collect all travel times between targets into a dictionary
+    # e.g. { 'stopid_1': {'stopid_2': 15, 'stopid_3': 20 }, 'stopid_2': {'stopid_1': 17, 'stopid_3': 10} ... }
     target_ids = target_info.keys()
     tts = {}
     sys.stdout.write('querying travel times to targets: ')

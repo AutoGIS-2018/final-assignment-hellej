@@ -2,6 +2,7 @@ import itertools as itr
 import pandas as pd
 
 def get_target_permutations(tt_dfs):
+    # get keys (stop ids) of dictionary as list
     to_ids = tt_dfs.keys()
     print('\nGet all possible routes...')
     to_ids_perms = list(itr.permutations(to_ids, len(to_ids)))
@@ -9,6 +10,9 @@ def get_target_permutations(tt_dfs):
     return to_ids_perms
 
 def get_all_ttimes(target_perms, tts_all):
+    # collect travel times for all permutations (route options)
+    # e.g. if calculating travel times for route of three stops,
+    # travel times of each permutation are collected as list [tt (min), tt (min), tt (min)]
     all_perm_times = []
     for target_perm in target_perms:
         perm_times = []
@@ -23,6 +27,8 @@ def get_all_ttimes(target_perms, tts_all):
     return perms_times
 
 def calculate_total_ttimes(perms_ttimes, target_info):
+    # summarize travel times of all permutations (route options)
+    # e.g. sum([12, 10, 20]) -> 42 (min)
     perms_ttimes['orig_id'] = [perm[0] for perm in perms_ttimes['perm']]
     perms_ttimes['orig_name'] = [target_info[perm[0]]['name'] for perm in perms_ttimes['perm']]
     perms_ttimes['dest_id'] = [perm[len(perm)-1] for perm in perms_ttimes['perm']]
@@ -30,30 +36,9 @@ def calculate_total_ttimes(perms_ttimes, target_info):
     perms_ttimes['tot_ttime'] = [sum(ttimes) for ttimes in perms_ttimes['ttimes']]
     return perms_ttimes
 
-def askOrigDest(target_info):
-    print('\nSelect origin and destination from ', end='')
-    locnames = []
-    for target in target_info.values():
-        locnames.append(target['name'])
-    print(locnames)
-    while True:
-        print('type origin name (or leave empty): ', end='')
-        orig = input()
-        if (orig in locnames or orig == ''):
-            break
-        else:
-            print('invalid origin name')
-    while True:
-        print('type destination name (or leave empty): ', end='')
-        dest = input()
-        if (dest in locnames or dest == ''):
-            break
-        else:
-            print('invalid destination name')
-    return { 'orig': orig, 'dest': dest }
-
 def get_best_routes(all_ttimes_summary, origin, target):
     summary_df = all_ttimes_summary.copy()
+    # filter routes by fixed origin and/or destination name if defined
     if (origin != ''):
         summary_df = summary_df.loc[summary_df['orig_name'] == origin]
     if (target != ''):

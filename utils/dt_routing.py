@@ -4,6 +4,13 @@ import polyline
 from shapely.geometry import Point, LineString
 
 def build_plan_query(coords_from, coords_to, walkSpeed, maxWalkDistance):
+    '''
+    Function for combining query string for route plan using Digitransit Routing API. 
+    Returns
+    -------
+    <string>
+        Digitransit Routing API compatible GraphQL query for querying route plan.
+    '''
     return f'''
     plan(
         from: {{lat: {coords_from['lat']}, lon: {coords_from['lon']}}}
@@ -15,6 +22,13 @@ def build_plan_query(coords_from, coords_to, walkSpeed, maxWalkDistance):
     '''
 
 def build_full_route_query(coords_from, coords_to, walkSpeed, maxWalkDistance):
+    '''
+    Function for combining query string for full route plan using Digitransit Routing API. 
+    Returns
+    -------
+    <string>
+        Digitransit Routing API compatible GraphQL query for querying full route plan.
+    '''
     query = f'''
     {{
     {build_plan_query(coords_from, coords_to, walkSpeed, maxWalkDistance)}
@@ -38,6 +52,13 @@ def build_full_route_query(coords_from, coords_to, walkSpeed, maxWalkDistance):
     return query
 
 def build_travel_time_query(coords_from, coords_to, walkSpeed, maxWalkDistance):
+    '''
+    Function for building travel time query for Digitransit Routing API. 
+    Returns
+    -------
+    <string>
+        Digitransit Routing API compatible GraphQL query for querying travel time.
+    '''
     query = f'''
     {{
     {build_plan_query(coords_from, coords_to, walkSpeed, maxWalkDistance)}
@@ -47,6 +68,13 @@ def build_travel_time_query(coords_from, coords_to, walkSpeed, maxWalkDistance):
     return query
 
 def run_query(query):
+    '''
+    Function for running Digitransit Routing API query in the API. 
+    Returns
+    -------
+    <dictionary>
+        Results of the query as a dictionary.
+    '''
     dt_routing_endpoint = 'https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql' 
     headers = {'Content-Type': 'application/json'}
     request = requests.post(dt_routing_endpoint, json={'query': query}, headers=headers)
@@ -56,18 +84,39 @@ def run_query(query):
         raise Exception('Query failed to run by returning code of {}. {}'.format(request.status_code, query))
 
 def get_route_itineraries(coords_from, coords_to, walkSpeed, maxWalkDistance):
+    '''
+    Function for building and running routing query in Digitransit API.
+    Returns
+    -------
+    <list of dictionaries>
+        Results of the routing request as list of itineraries
+    '''
     query = build_full_route_query(coords_from, coords_to, walkSpeed, maxWalkDistance)
     response = run_query(query)
     itineraries = response['data']['plan']['itineraries']
     return itineraries
 
 def create_line_geom(point_coords):
+    '''
+    Function for building line geometries from list of coordinate tuples [(x,y), (x,y)].
+    Returns
+    -------
+    <LineString>
+    '''
     try:
         return LineString([point for point in point_coords])
     except:
         return
 
 def parse_route_geom(itins):
+    '''
+    Function for parsing route geometries got from Digitransit Routing API. 
+    Coordinates are decoded from Google Encoded Polyline Algorithm Format.
+    Returns
+    -------
+    <list of dictionaries>
+        List of itineraries
+    '''
     for itin in itins:
         itin_coords = []
         legs = itin['legs']
@@ -81,6 +130,14 @@ def parse_route_geom(itins):
     return itins
 
 def get_mean_travel_time(coords_from, coords_to, walkSpeed, maxWalkDistance):
+    '''
+    Function for acquiring mean travel time between two places using above defined functions.
+    Digitransit Routing API for public transport is used.
+    Returns
+    -------
+    <int>
+        Mean travel time using public transport
+    '''
     query = build_travel_time_query(coords_from, coords_to, walkSpeed, maxWalkDistance)
     response = run_query(query)
     itineraries = response['data']['plan']['itineraries']
