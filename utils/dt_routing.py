@@ -3,7 +3,7 @@ import json
 import polyline
 from shapely.geometry import Point, LineString
 
-def build_plan_query(coords_from, coords_to, walkSpeed, maxWalkDistance):
+def build_plan_query(coords_from, coords_to, walkSpeed, maxWalkDistance, itins_count):
     '''
     Function for combining query string for route plan using Digitransit Routing API. 
     Returns
@@ -15,13 +15,13 @@ def build_plan_query(coords_from, coords_to, walkSpeed, maxWalkDistance):
     plan(
         from: {{lat: {coords_from['lat']}, lon: {coords_from['lon']}}}
         to: {{lat: {coords_to['lat']}, lon: {coords_to['lon']}}}
-        numItineraries: 3,
+        numItineraries: {itins_count},
         walkSpeed: {walkSpeed},
         maxWalkDistance: {maxWalkDistance}
     )
     '''
 
-def build_full_route_query(coords_from, coords_to, walkSpeed, maxWalkDistance):
+def build_full_route_query(coords_from, coords_to, walkSpeed, maxWalkDistance, itins_count):
     '''
     Function for combining query string for full route plan using Digitransit Routing API. 
     Returns
@@ -31,7 +31,7 @@ def build_full_route_query(coords_from, coords_to, walkSpeed, maxWalkDistance):
     '''
     query = f'''
     {{
-    {build_plan_query(coords_from, coords_to, walkSpeed, maxWalkDistance)}
+    {build_plan_query(coords_from, coords_to, walkSpeed, maxWalkDistance, itins_count)}
     {{
         itineraries {{
             duration
@@ -51,7 +51,7 @@ def build_full_route_query(coords_from, coords_to, walkSpeed, maxWalkDistance):
     '''
     return query
 
-def build_travel_time_query(coords_from, coords_to, walkSpeed, maxWalkDistance):
+def build_travel_time_query(coords_from, coords_to, walkSpeed, maxWalkDistance, itins_count):
     '''
     Function for building travel time query for Digitransit Routing API. 
     Returns
@@ -61,7 +61,7 @@ def build_travel_time_query(coords_from, coords_to, walkSpeed, maxWalkDistance):
     '''
     query = f'''
     {{
-    {build_plan_query(coords_from, coords_to, walkSpeed, maxWalkDistance)}
+    {build_plan_query(coords_from, coords_to, walkSpeed, maxWalkDistance, itins_count)}
     {{ itineraries {{ duration }} }}
     }}
     '''
@@ -83,7 +83,7 @@ def run_query(query):
     else:
         raise Exception('Query failed to run by returning code of {}. {}'.format(request.status_code, query))
 
-def get_route_itineraries(coords_from, coords_to, walkSpeed, maxWalkDistance):
+def get_route_itineraries(coords_from, coords_to, walkSpeed, maxWalkDistance, itins_count):
     '''
     Function for building and running routing query in Digitransit API.
     Returns
@@ -91,7 +91,8 @@ def get_route_itineraries(coords_from, coords_to, walkSpeed, maxWalkDistance):
     <list of dictionaries>
         Results of the routing request as list of itineraries
     '''
-    query = build_full_route_query(coords_from, coords_to, walkSpeed, maxWalkDistance)
+    query = build_full_route_query(coords_from, coords_to, walkSpeed, maxWalkDistance, itins_count)
+    # print(query)
     response = run_query(query)
     itineraries = response['data']['plan']['itineraries']
     return itineraries
@@ -108,14 +109,14 @@ def create_line_geom(point_coords):
     except:
         return
 
-def parse_route_geom(itins):
+def parse_itin_geom(itins):
     '''
     Function for parsing route geometries got from Digitransit Routing API. 
     Coordinates are decoded from Google Encoded Polyline Algorithm Format.
     Returns
     -------
     <list of dictionaries>
-        List of itineraries
+        List of itineraries as dictionaries
     '''
     for itin in itins:
         itin_coords = []
@@ -123,13 +124,18 @@ def parse_route_geom(itins):
         for leg in legs:
             geom = leg['legGeometry']['points']
             # parse coordinates from Google Encoded Polyline Algorithm Format
-            coords = polyline.decode(geom)
+            decoded = polyline.decode(geom)
+            # swap coordinates (y, x) -> (x, y)
+            coords = [point[::-1] for point in decoded]
             leg['line_geom'] = create_line_geom(coords)
+            leg['first_point'] = coords[0]
+            leg['last_point'] = coords[len(coords)-1]
             itin_coords += coords
+            del leg['legGeometry']
         itin['line_geom'] = create_line_geom(itin_coords)
     return itins
 
-def get_mean_travel_time(coords_from, coords_to, walkSpeed, maxWalkDistance):
+def get_mean_travel_time(coords_from, coords_to, walkSpeed, maxWalkDistance, itins_count, minutes):
     '''
     Function for acquiring mean travel time between two places using above defined functions.
     Digitransit Routing API for public transport is used.
@@ -138,12 +144,15 @@ def get_mean_travel_time(coords_from, coords_to, walkSpeed, maxWalkDistance):
     <int>
         Mean travel time using public transport
     '''
-    query = build_travel_time_query(coords_from, coords_to, walkSpeed, maxWalkDistance)
+    query = build_travel_time_query(coords_from, coords_to, walkSpeed, maxWalkDistance, itins_count)
     response = run_query(query)
     itineraries = response['data']['plan']['itineraries']
     # calculate mean travel time of three inireraries
     duration_sum = 0
     for itin in itineraries:
         duration_sum += itin['duration']
-    mean_tt_min = int(round((duration_sum/len(itineraries))/60))
-    return mean_tt_min
+
+    if (minutes == True):     
+        return int(round((duration_sum/len(itineraries))/60))
+    else:
+        return int(round(duration_sum/len(itineraries)))

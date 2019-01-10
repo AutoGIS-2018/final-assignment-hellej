@@ -5,6 +5,7 @@ def get_target_permutations(tt_dfs):
     # get keys (stop ids) of dictionary as list
     to_ids = tt_dfs.keys()
     print('\nGet all possible routes...')
+    # get all possible sequences of stops
     to_ids_perms = list(itr.permutations(to_ids, len(to_ids)))
     print('found', len(to_ids_perms), 'route options')
     return to_ids_perms
