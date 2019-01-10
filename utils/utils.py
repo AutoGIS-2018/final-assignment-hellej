@@ -1,7 +1,8 @@
 import glob
 import geopandas as gpd
+from datetime import datetime, date, time, timedelta
 
-def getUserInput(text, options, caseSens, error):
+def get_user_input(text, options, caseSens, error):
     while True:
         print(text, end='')
         answer = input()
