@@ -11,7 +11,7 @@ def build_plan_query(coords_from, coords_to, walkSpeed, maxWalkDistance, itins_c
     <string>
         Digitransit Routing API compatible GraphQL query for querying route plan.
     '''
-    return f'''
+    plan_query = f'''
     plan(
         from: {{lat: {coords_from['lat']}, lon: {coords_from['lon']}}}
         to: {{lat: {coords_to['lat']}, lon: {coords_to['lon']}}}
@@ -22,6 +22,8 @@ def build_plan_query(coords_from, coords_to, walkSpeed, maxWalkDistance, itins_c
         time: "{str(datetime.strftime("%H:%M:%S"))}",
     )
     '''
+    # print(plan_query)
+    return plan_query
 
 def build_full_route_query(coords_from, coords_to, walkSpeed, maxWalkDistance, itins_count, datetime):
     '''
@@ -130,8 +132,8 @@ def parse_itin_geom(itins):
             # swap coordinates (y, x) -> (x, y)
             coords = [point[::-1] for point in decoded]
             leg['line_geom'] = create_line_geom(coords)
-            leg['first_point'] = coords[0]
-            leg['last_point'] = coords[len(coords)-1]
+            leg['first_point'] = Point(coords[0])
+            leg['last_point'] = Point(coords[len(coords)-1])
             itin_coords += coords
             del leg['legGeometry']
         itin['line_geom'] = create_line_geom(itin_coords)

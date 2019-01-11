@@ -3,6 +3,7 @@ import geopandas as gpd
 import utils.dt_routing as dt_rt
 from fiona.crs import from_epsg
 import sys
+from datetime import datetime
 
 grid = gpd.read_file('data/MetropAccessGrid/MetropAccess_YKR_grid_EurefFIN.shp')
 
@@ -69,7 +70,7 @@ def get_tt_between_targets(target_info, folder, digitransit):
                 for from_id in target_ids:
                     walkSpeed = '1.33'
                     if (from_id != to_id):
-                        from_tt = dt_rt.get_mean_travel_time(target_info[from_id]['latLon'], target_info[to_id]['latLon'], walkSpeed, 6000, 2, True)
+                        from_tt = dt_rt.get_mean_travel_time(target_info[from_id]['latLon'], target_info[to_id]['latLon'], walkSpeed, 6000, 2, True, datetime.now())
                         to_tts[from_id] = from_tt
                 tts[to_id] = to_tts
             except:

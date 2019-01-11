@@ -20,3 +20,17 @@ def get_user_input(text, options, caseSens, error):
                     print(error)
                 continue
         return answer
+
+def get_next_weekday():
+    weekday = datetime.weekday(date.today())
+    skipdays = 1
+    if (weekday == 4):
+        skipdays = 3
+    if (weekday == 5):
+        skipdays = 2
+    next_weekday = date.today() + timedelta(days=skipdays)
+    return next_weekday
+
+def get_next_weekday_datetime(hh, mm):
+    next_weekday_datetime = datetime.combine(get_next_weekday(), time(hh, mm))
+    return next_weekday_datetime
