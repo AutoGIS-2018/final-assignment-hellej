@@ -3,6 +3,16 @@ import geopandas as gpd
 from datetime import datetime, date, time, timedelta
 
 def get_user_input(text, options, caseSens, error):
+    '''
+    Function for asking and reading user input from keyboard. 
+    User is asked the question (text: string) until the input satisfies
+    the requirements for the answer (options: [] & caseSens: bool).
+    If user input is not valid, error message is shown (and question asked again).
+    Returns
+    -------
+    <string>
+        Read user input as string.
+    '''
     while True:
         print(text, end='')
         answer = input()

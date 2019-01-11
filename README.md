@@ -53,5 +53,29 @@ $ python route_planner_app.py
   └── route_planner_app.py          # Main application (run this in terminal)
 ```
 
+
+## A side project: bike & ride analysis using Digitransit API 
+A smaller side project was also composed as a proof of concept of spatial analysis for bike & ride potential using Digitransit Routing API. Koskela was selected as the study area in developing and testing the analysis. Being less connected to fast PT routes than the surrounding neighborhoods (e.g. Kumpula & Käpylä), considerable bike & ride potential was anticipated for the area. 
+
+The analysis is based on the following assumptions. 
+* Cycling can be modelled as fast walking (in routing)
+* Average cycling speed is 16.6 km/h
+* It takes additional 30 s to both get the bike and lock it in the destination
+* It takes additional 2 min to walk from the bicycle stand to the stop
+
+The analysis proceeds with the following logic:
+1) Polygon centers are extracted from HSY's 250m population grid
+2) Center points that fall inside the area of interest are selected for analysis
+3) Routing is executed from each point to Helsinki Central Station
+4) In the routing, walking speed is set as cycling speed
+5) From the returned four itineraries, two fastest are selected for further processing
+6) The first legs of the itineraries are taken as cycling 
+7) If the first "legs" of the two routes are to different stations, both of them are analyzed
+8) Bike & ride hubs are identified as the stations where most of the cycling legs end
+9) Cumulative reached population and average time saved are aggregated for each bike & ride hub
+10) Results are visualized as a map
+
+![bike_ride_potential_koskela](demo/output/koskela_br.png)
+
 ## License
 [MIT](LICENSE)

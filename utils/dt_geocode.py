@@ -8,12 +8,12 @@ from fiona.crs import from_epsg
 import glob
 
 def getGeocodeRequest(search_word):
-    """
+    '''
     Function for concatenating geocode request string for Digitransit Geocoding API. 
     Returns
     -------
     <string>
-    """
+    '''
     # build request url for Digitransit Geocoding API 
     vars = {'text': search_word, 'size': 1}
     baseurl = 'https://api.digitransit.fi/geocoding/v1/search?'
@@ -21,13 +21,13 @@ def getGeocodeRequest(search_word):
     return request
 
 def geocode(search_word):
-    """
+    '''
     Function for geocoding search_word using Digitransit Geocoding API. 
     Returns
     -------
     <dictionary>
         Geocoding results including coordinates, search word and confidence.
-    """
+    '''
     # print('geocoding:', search_word)
     request = getGeocodeRequest(search_word)
     # print('request:', request)
@@ -50,9 +50,9 @@ def geocode(search_word):
     return {'coords': geom['coordinates'], 'place': props['label'], 'confidence': round(props['confidence'],3), 'search_word': search_word}
 
 def geoCodedToGeoDF(geocode_results):
-    """
+    '''
     Function for converting geocoding results (dictionary) into a pandas GeoDataFrame object.
-    """
+    '''
     names = []
     addresses = []
     points = []
