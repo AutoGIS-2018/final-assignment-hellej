@@ -16,6 +16,7 @@ koskela_poly = gpd.read_file('data/koskela/koskela.shp')
 dest_coords = { 'lat': 60.170435, 'lon': 24.940673 } # Helsinki railvay station
 
 #%%
+# extract center points from population grid
 pop_point = pop_poly.copy()
 pop_point['geometry'] = [geom.centroid for geom in pop_point['geometry']]
 pop_point = pop_point.to_crs(from_epsg(4326))
@@ -30,13 +31,15 @@ pop_koskela = pop_point.loc[point_mask]
 test_point = pop_koskela[pop_koskela['INDEX'] == 17420].reset_index()
 
 #%% 
-# get and collect all bike & ride (br) routes
+# set time penalties for unlocking, locking and walking to the station
 unlock_lock_t = 1
 walk_station_t = 2
+# get and collect all bike & ride routes & travel times 
 br_dfs = [br_utils.get_bike_ride_effect(row, dest_coords, unlock_lock_t, walk_station_t) for index, row in pop_koskela.iterrows()]
 br_df = pd.concat(br_dfs)
 
 #%%
+# save results as shapefiles
 cols = ['hsy_idx', 'pop', 'tt_norm', 'tt_br', 'tt_diff', 'saved_min', 'tt_b', 'dist_b', 'last_p_str']
 br_lines_gdf = gpd.GeoDataFrame(data= br_df[cols], geometry= br_df['arrow'], crs= from_epsg(4326))
 br_lines_gdf.to_file('demo/output/br_lines.shp')
@@ -51,6 +54,7 @@ br_hubs_gdf = gpd.GeoDataFrame(data= br_df[cols], geometry= br_df['last_point'],
 br_hubs_gdf.to_file('demo/output/br_hubs.shp')
 
 #%%
+# group and summarize hubs based on last point of the first transit leg (cycling)
 grouped = br_hubs_gdf.groupby('last_p_str')
 hub_dfs = []
 rownum = 0
@@ -66,5 +70,6 @@ hub_sum_gdf = pd.concat(hub_dfs).reset_index(drop=True)
 print(hub_sum_gdf)
 
 #%%
+# group and summarize adjacent hubs
 br_sum_hubs_gdf = br_utils.group_summarize_adjacent_hubs(hub_sum_gdf, 250)
 br_sum_hubs_gdf.to_file('demo/output/br_sum_hubs.shp')

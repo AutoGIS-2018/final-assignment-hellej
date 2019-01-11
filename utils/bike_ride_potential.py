@@ -14,7 +14,6 @@ def get_best_itins(origin, dest_coords, bikeSpeed, routes):
     itins = dt_rt.get_route_itineraries(origin, dest_coords, bikeSpeed, 6000, 4, datetime)
     itins = dt_rt.parse_itin_geom(itins)
     sorted_itins = sorted(itins, key=getItinDuration)
-    # print(sorted_itins)
     return sorted_itins
 
 def asMinutes(seconds):
@@ -39,6 +38,7 @@ def get_bike_ride_effect(row, dest_coords, unlock_lock_t, walk_station_t):
     geom = row['geometry']
     fromLatLon = {'lat': geom.y, 'lon': geom.x }
 
+    # get reference travel time with default routing parameters
     walkSpeed = '1.33'
     datetime = utils.get_next_weekday_datetime(8, 45)
     tt_norm = dt_rt.get_mean_travel_time(fromLatLon, dest_coords, walkSpeed, 6000, 3, False, datetime)
@@ -49,12 +49,15 @@ def get_bike_ride_effect(row, dest_coords, unlock_lock_t, walk_station_t):
     b1 = itin1['legs'][0]
     b2 = itin2['legs'][0]
 
+    # check if cycling legs of the two best itineraries are the same
     if (str(b1['last_point']) != str(b2['last_point'])):
+        # return both cycling legs and half of the population 
         population = int(round(population/2))
         br_df1 = get_bike_df(row, population, itin1, tt_norm, cut_t)
         br_df2 = get_bike_df(row, population, itin2, tt_norm, cut_t)
         return pd.concat([br_df1, br_df2])
     else:
+        # keep only one cycling leg
         return get_bike_df(row, population, itin1, tt_norm, cut_t)
 
 def group_summarize_adjacent_hubs(hub_sum_gdf, distance):
