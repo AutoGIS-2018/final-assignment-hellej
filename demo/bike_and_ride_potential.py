@@ -48,10 +48,26 @@ br_routes_gdf = gpd.GeoDataFrame(data= br_df[cols], geometry= br_df['bike_geom']
 br_routes_gdf.to_file('demo/output/br_routes.shp')
 
 br_origins_gdf = gpd.GeoDataFrame(data= br_df[cols], geometry= br_df['first_point'], crs= from_epsg(4326))
-br_origins_gdf.to_file('demo/output/br_origins.shp')
 
 br_hubs_gdf = gpd.GeoDataFrame(data= br_df[cols], geometry= br_df['last_point'], crs= from_epsg(4326))
 br_hubs_gdf.to_file('demo/output/br_hubs.shp')
+
+#%%
+# group and summarize br travel times from origins based on HSY idx
+grouped = br_origins_gdf.groupby('hsy_idx')
+orig_gdfs = []
+rownum = 0
+for key, values in grouped:
+    pop = list(values['pop'])[0]
+    tt_norm = list(values['tt_norm'])[0]
+    tt_br = values['tt_br'].min()
+    tt_diff = values['tt_diff'].max()
+    geom = list(values['geometry'])[0]
+    orig_gdf = gpd.GeoDataFrame(data={'rownum': rownum, 'pop': [pop], 'tt_norm': [tt_norm], 'tt_br': [tt_br], 'tt_diff': [tt_diff]}, geometry=[geom], crs=from_epsg(4326))
+    orig_gdfs.append(orig_gdf)
+    rownum += 1
+br_origins_gdf = pd.concat(orig_gdfs).reset_index(drop=True)
+br_origins_gdf.to_file('demo/output/br_origins.shp')
 
 #%%
 # group and summarize hubs based on last point of the first transit leg (cycling)
