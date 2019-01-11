@@ -31,7 +31,9 @@ test_point = pop_koskela[pop_koskela['INDEX'] == 17420].reset_index()
 
 #%% 
 # get and collect all bike & ride (br) routes
-br_dfs = [br_utils.get_bike_ride_effect(row, dest_coords) for index, row in pop_koskela.iterrows()]
+unlock_lock_t = 1
+walk_station_t = 2
+br_dfs = [br_utils.get_bike_ride_effect(row, dest_coords, unlock_lock_t, walk_station_t) for index, row in pop_koskela.iterrows()]
 br_df = pd.concat(br_dfs)
 
 #%%

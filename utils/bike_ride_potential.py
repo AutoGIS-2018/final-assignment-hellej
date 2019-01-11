@@ -20,20 +20,21 @@ def get_best_itins(origin, dest_coords, bikeSpeed, routes):
 def asMinutes(seconds):
     return int(round(seconds/60))
 
-def get_bike_df(row, population, itin, tt_norm):
+def get_bike_df(row, population, itin, tt_norm, cut_t):
     hsy_idx = row['INDEX']
     bike = itin['legs'][0]
-    tt_br = asMinutes(itin['duration'])
-    tt_b = asMinutes(bike['duration'])
-    tt_diff = asMinutes(tt_norm - itin['duration'])
+    tt_br = asMinutes(itin['duration']) - cut_t
+    tt_b = asMinutes(bike['duration']) + cut_t
+    tt_diff = asMinutes(tt_norm - itin['duration']) - cut_t
     dist_b = int(round(bike['distance']))
     arrow = LineString([bike['first_point'], bike['last_point']])
-    saved_min = asMinutes(population * (tt_norm - itin['duration']))
+    saved_min = asMinutes(population * (tt_norm - itin['duration'])) - population * cut_t
 
     br_df = pd.DataFrame(data={'hsy_idx': [hsy_idx], 'pop': [population], 'tt_norm': [tt_norm], 'tt_br': [tt_br], 'tt_diff': [tt_diff], 'saved_min': [saved_min], 'tt_b': [tt_b], 'dist_b': [dist_b], 'first_point': [bike['first_point']], 'last_point': [bike['last_point']], 'last_p_str': [str(bike['last_point'])], 'arrow': [arrow], 'bike_geom': [bike['line_geom']] })
     return br_df
 
-def get_bike_ride_effect(row, dest_coords):
+def get_bike_ride_effect(row, dest_coords, unlock_lock_t, walk_station_t):
+    cut_t = unlock_lock_t + walk_station_t
     population = row['ASUKKAITA']
     geom = row['geometry']
     fromLatLon = {'lat': geom.y, 'lon': geom.x }
@@ -47,14 +48,14 @@ def get_bike_ride_effect(row, dest_coords):
     itin2 = br_itins[1]
     b1 = itin1['legs'][0]
     b2 = itin2['legs'][0]
-    
+
     if (str(b1['last_point']) != str(b2['last_point'])):
         population = int(round(population/2))
-        br_df1 = get_bike_df(row, population, itin1, tt_norm)
-        br_df2 = get_bike_df(row, population, itin2, tt_norm)
+        br_df1 = get_bike_df(row, population, itin1, tt_norm, cut_t)
+        br_df2 = get_bike_df(row, population, itin2, tt_norm, cut_t)
         return pd.concat([br_df1, br_df2])
     else:
-        return get_bike_df(row, population, itin1, tt_norm)
+        return get_bike_df(row, population, itin1, tt_norm, cut_t)
 
 def group_summarize_adjacent_hubs(hub_sum_gdf, distance):
     # set radius of the buffer
