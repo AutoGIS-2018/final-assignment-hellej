@@ -36,6 +36,7 @@ $ python route_planner_app.py
   │   ├── HelsinkiTravelTimeMatrix2018/ */ *.txt     
   │   └── MetropAccessGrid/ *.shp
   ├── demo
+  │   ├── bike_and_ride_potential.py  
   │   ├── dt_geocode.py             # Jupyter notebook like script file to run with VSCode
   │   ├── dt_routing.py             # Jupyter notebook like script file to run with VSCode
   │   ├── optimize_route.py         # Jupyter notebook like script file to run with VSCode
@@ -43,6 +44,7 @@ $ python route_planner_app.py
   ├── input
   │   └── *.shp                     # Optional locations to use in multi-stop route optimization
   ├── utils                         # Utils-module
+  │   ├── bike_ride_potential.py    # Utils for querying and processing bike & ride routes
   │   ├── dt_geocode.py             # Utilization of Digitransit Geocoding API
   │   ├── dt_routing.py             # Utilization of Digitransit Routing API
   │   ├── routes_tt.py              # Forming and comparing multi-stop route options
@@ -54,7 +56,7 @@ $ python route_planner_app.py
 ```
 
 
-## A side project: analysis for bike & ride potential using Digitransit Routing API 
+# A side project: analysis for bike & ride potential using Digitransit Routing API 
 A smaller side project was also composed as a proof of concept of spatial analysis for bike & ride potential using Digitransit Routing API. Koskela was selected as the study area for developing and testing the analysis. Being less connected to fast PT routes than the surrounding neighborhoods (e.g. Kumpula & Käpylä), considerable bike & ride potential was anticipated for the area. 
 
 **The analysis is based on the following assumptions:**
