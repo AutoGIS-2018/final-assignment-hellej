@@ -7,7 +7,7 @@ import pandas as pd
 import geopandas as gpd
 import utils.bike_ride_potential as br_utils
 from fiona.crs import from_epsg
-# from shapely.geometry import Point, MultiPoint
+import sys
 
 #%%
 # read population data
@@ -24,22 +24,30 @@ pop_point = pop_point.to_crs(from_epsg(4326))
 #%%
 # select only points inside AOI (Koskela-polygon)
 point_mask = pop_point.intersects(koskela_poly.loc[0, 'geometry'])
-pop_koskela = pop_point.loc[point_mask]
+pop_koskela = pop_point.loc[point_mask].reset_index(drop=True)
 
 #%% 
 # set time penalties for unlocking, locking and walking to the station
-unlock_lock_t = 1
-walk_station_t = 2
+unlock_lock_t = 60
+walk_station_t = 120
 
 #%%
 # get and collect all bike & ride routes & travel times 
-br_dfs = [br_utils.get_bike_ride_feature(row, dest_coords, unlock_lock_t, walk_station_t) for index, row in pop_koskela.iterrows()]
+br_dfs = []
+row_count = len(pop_koskela.index)
+print('Get bike & ride itineraries: ')
+for index, row in pop_koskela.iterrows():
+    sys.stdout.write(str(index+1)+'/'+str(row_count)+' ')
+    sys.stdout.flush()
+    br_dfs.append(br_utils.get_bike_ride_feature(row, dest_coords, unlock_lock_t, walk_station_t))
 br_df = pd.concat(br_dfs)
 
 #%%
 # attributes of bike & ride features
-cols = ['hsy_idx', 'pop', 'tt_norm', 'tt_br', 'tt_diff', 'saved_min', 'tt_b', 'dist_b', 'last_p_str']
+cols = ['hsy_idx', 'pop', 'tt_norm', 'tt_br', 'tt_diff', 'tt_ratio', 'saved_min', 'tt_b', 'dist_b', 'last_p_str']
+print(br_df[cols].head())
 
+#%%
 # save bike & ride features as shapefiles with different geometries:
 
 # cycling routes as simple origin-destination lines
@@ -62,8 +70,9 @@ for key, values in grouped:
     tt_norm = list(values['tt_norm'])[0]
     tt_br = values['tt_br'].min()
     tt_diff = values['tt_diff'].max()
+    tt_ratio = values['tt_ratio'].max()
     geom = list(values['geometry'])[0]
-    orig_gdf = gpd.GeoDataFrame(data={'rownum': rownum, 'pop': [pop], 'tt_norm': [tt_norm], 'tt_br': [tt_br], 'tt_diff': [tt_diff]}, geometry=[geom], crs=from_epsg(4326))
+    orig_gdf = gpd.GeoDataFrame(data={'rownum': rownum, 'pop': [pop], 'tt_norm': [tt_norm], 'tt_br': [tt_br], 'tt_diff': [tt_diff], 'tt_ratio': [tt_ratio]}, geometry=[geom], crs=from_epsg(4326))
     orig_gdfs.append(orig_gdf)
     rownum += 1
 br_origins_gdf = pd.concat(orig_gdfs).reset_index(drop=True)

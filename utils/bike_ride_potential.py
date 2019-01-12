@@ -9,7 +9,7 @@ from fiona.crs import from_epsg
 def getItinDuration(itin):
     return itin['duration']
 
-def asMinutes(seconds):
+def as_min(seconds):
     return int(round(seconds/60))
 
 def get_cycling_leg_df(row, population, itin, tt_norm, add_t):
@@ -17,14 +17,15 @@ def get_cycling_leg_df(row, population, itin, tt_norm, add_t):
     # also add several geometry columns to the returned DF
     hsy_idx = row['INDEX']
     bike = itin['legs'][0]
-    tt_br = asMinutes(itin['duration']) + add_t
-    tt_b = asMinutes(bike['duration']) + add_t
-    tt_diff = asMinutes(tt_norm - itin['duration']) - add_t
+    tt_b = bike['duration'] + add_t
+    tt_br = itin['duration'] + add_t
+    tt_diff = tt_norm - tt_br
+    tt_ratio = int(round((tt_diff/tt_norm)*100))
+    tt_total_saved = population * tt_diff
     dist_b = int(round(bike['distance']))
     arrow = LineString([bike['first_point'], bike['last_point']])
-    saved_min = asMinutes(population * (tt_norm - itin['duration'])) - population * add_t
 
-    br_df = pd.DataFrame(data={'hsy_idx': [hsy_idx], 'pop': [population], 'tt_norm': [asMinutes(tt_norm)], 'tt_br': [tt_br], 'tt_diff': [tt_diff], 'saved_min': [saved_min], 'tt_b': [tt_b], 'dist_b': [dist_b], 'first_point': [bike['first_point']], 'last_point': [bike['last_point']], 'last_p_str': [str(bike['last_point'])], 'arrow': [arrow], 'bike_geom': [bike['line_geom']] })
+    br_df = pd.DataFrame(data={'hsy_idx': [hsy_idx], 'pop': [population], 'tt_norm': [as_min(tt_norm)], 'tt_br': [as_min(tt_br)], 'tt_diff': [as_min(tt_diff)], 'tt_ratio': [tt_ratio], 'saved_min': [as_min(tt_total_saved)], 'tt_b': [as_min(tt_b)], 'dist_b': [dist_b], 'first_point': [bike['first_point']], 'last_point': [bike['last_point']], 'last_p_str': [str(bike['last_point'])], 'arrow': [arrow], 'bike_geom': [bike['line_geom']] })
     return br_df
 
 def get_bike_ride_feature(row, dest_coords, unlock_lock_t, walk_station_t):
