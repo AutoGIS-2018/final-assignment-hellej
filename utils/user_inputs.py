@@ -1,7 +1,3 @@
-import glob
-import geopandas as gpd
-from datetime import datetime, date, time, timedelta
-
 def get_user_input(text, options, caseSens, error):
     '''
     Function for asking and reading user input from keyboard. 
@@ -31,16 +27,22 @@ def get_user_input(text, options, caseSens, error):
                 continue
         return answer
 
-def get_next_weekday():
-    weekday = datetime.weekday(date.today())
-    skipdays = 1
-    if (weekday == 4):
-        skipdays = 3
-    if (weekday == 5):
-        skipdays = 2
-    next_weekday = date.today() + timedelta(days=skipdays)
-    return next_weekday
-
-def get_next_weekday_datetime(hh, mm):
-    next_weekday_datetime = datetime.combine(get_next_weekday(), time(hh, mm))
-    return next_weekday_datetime
+def get_user_input_int(text, low, high, error):
+    '''
+    Function for asking and reading user input from keyboard.
+    Input must be integer number from low (param) to high (param).
+    Returns
+    -------
+    <integer>
+        Read user input as integer.
+    '''
+    while True:
+        print(text, end='')
+        try:
+            num = int(input())
+            if (num >= low and num <= high):
+                return num
+            else:
+                continue
+        except:
+            continue

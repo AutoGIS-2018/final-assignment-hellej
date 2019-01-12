@@ -3,7 +3,6 @@ import geopandas as gpd
 import utils.dt_routing as dt_rt
 from fiona.crs import from_epsg
 import sys
-from datetime import datetime
 
 grid = gpd.read_file('data/MetropAccessGrid/MetropAccess_YKR_grid_EurefFIN.shp')
 
@@ -54,40 +53,48 @@ def get_filepath_to_tt_file(ykr_id, folder):
     file_path = folder + subfolder + filename
     return file_path
 
-def get_tt_between_targets(target_info, folder, digitransit):
+def get_tt_between_targets_DT(target_info, time):
     # get and collect all travel times between targets into a dictionary
     # e.g. { 'stopid_1': {'stopid_2': 15, 'stopid_3': 20 }, 'stopid_2': {'stopid_1': 17, 'stopid_3': 10} ... }
     target_ids = target_info.keys()
     tts = {}
-    sys.stdout.write('querying travel times to targets: ')
+    sys.stdout.write('\nquerying travel times to targets: ')
     sys.stdout.flush()
     for idx, to_id in enumerate(target_ids):
-        if (digitransit == True):
-            sys.stdout.write(str(idx+1)+'/'+str(len(target_ids))+' ')
-            sys.stdout.flush()
-            try:
-                to_tts = {}
-                for from_id in target_ids:
-                    walkSpeed = '1.33'
-                    if (from_id != to_id):
-                        from_tt = dt_rt.get_mean_travel_time(target_info[from_id]['latLon'], target_info[to_id]['latLon'], walkSpeed, 6000, 2, True, datetime.now())
-                        to_tts[from_id] = from_tt
-                tts[to_id] = to_tts
-            except:
-                print('\nError: no travel time file found for: '+ (target_info[to_id]['name'])+'.\n')
-                return
-        if (digitransit == False):
-            sys.stdout.write(str(idx+1)+'/'+str(len(target_ids))+' ')
-            sys.stdout.flush()
-            try:
-                filepath = get_filepath_to_tt_file(to_id, folder)
-                tts_df = pd.read_csv(filepath, sep=';')
-                to_tts = {}
-                for from_id in target_ids:
-                    from_tt = tts_df.loc[tts_df['from_id'] == from_id].iloc[0]['pt_m_t']
+        sys.stdout.write(str(idx+1)+'/'+str(len(target_ids))+' ')
+        sys.stdout.flush()
+        try:
+            to_tts = {}
+            for from_id in target_ids:
+                walkSpeed = '1.33'
+                if (from_id != to_id):
+                    from_tt = dt_rt.get_mean_travel_time(target_info[from_id]['latLon'], target_info[to_id]['latLon'], walkSpeed, 6000, 2, True, time)
                     to_tts[from_id] = from_tt
-                tts[to_id] = to_tts
-            except:
-                print('\nError: no travel time file found for: '+ (target_info[to_id]['name'])+'.\n')
-                return
+            tts[to_id] = to_tts
+        except:
+            print('\nError: no travel time file found for: '+ (target_info[to_id]['name'])+'.\n')
+            return
+    return tts
+
+def get_tt_between_targets_matrix(target_info, folder):
+    # get and collect all travel times between targets into a dictionary
+    # e.g. { 'stopid_1': {'stopid_2': 15, 'stopid_3': 20 }, 'stopid_2': {'stopid_1': 17, 'stopid_3': 10} ... }
+    target_ids = target_info.keys()
+    tts = {}
+    sys.stdout.write('\nquerying travel times to targets: ')
+    sys.stdout.flush()
+    for idx, to_id in enumerate(target_ids):
+        sys.stdout.write(str(idx+1)+'/'+str(len(target_ids))+' ')
+        sys.stdout.flush()
+        try:
+            filepath = get_filepath_to_tt_file(to_id, folder)
+            tts_df = pd.read_csv(filepath, sep=';')
+            to_tts = {}
+            for from_id in target_ids:
+                from_tt = tts_df.loc[tts_df['from_id'] == from_id].iloc[0]['pt_m_t']
+                to_tts[from_id] = from_tt
+            tts[to_id] = to_tts
+        except:
+            print('\nError: no travel time file found for: '+ (target_info[to_id]['name'])+'.\n')
+            return
     return tts
