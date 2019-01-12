@@ -54,6 +54,7 @@ $ python route_planner_app.py
   │   └── user_inputs.py            # Asking and validating keyboard inputs
   │── demo_geocoding.ipynb
   │── demo_route_optim.ipynb
+  │── demo_routing.ipynb
   └── route_planner_app.py          # Main application, run this in terminal
 ```
 
@@ -78,7 +79,7 @@ Also, a smaller (stand-alone) side project was composed as a proof of concept of
 8) Cumulative reached population and average time saved are aggregated for each bike & ride hub
 9) Results are visualized as a map
 
-## Interpretation of the [visualization](#map-of-bike-&-ride-potential-in-Koskela)
+## Interpretation of the [visualization](#map-of-bike--ride-potential-in-koskela)
 * Straight lines between origins and bike & ride hubs represent cycling legs that reduce total travel time by at least 9 minutes
 * Two most prominent bike & ride hubs for the AOI can be identified: Käpylä & Oulunkylä train stations
 * Labels above the origins show saved minutes (from choosing bike & ride itinerary)
