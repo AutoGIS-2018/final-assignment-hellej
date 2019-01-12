@@ -11,8 +11,8 @@ digitransit = False
 #%%
 # read and filter test data (cinemas as stops)
 cinemas = gpd.read_file('data/temp/cinemas.shp')
-large_cinemas = cinemas.loc[cinemas['rooms'] > 2]
-target_points = large_cinemas[:3]
+large_cinemas = cinemas.loc[cinemas['rooms'] > 1]
+target_points = large_cinemas[:8]
 
 #%%
 # get and gather target_info (ykr_ids, names & addresses)
