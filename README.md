@@ -58,7 +58,7 @@ $ python route_planner_app.py
 ```
 
 # A side project: <br/>Analysis for bike & ride potential using Digitransit Routing API 
-A smaller side project was also composed as a proof of concept of spatial analysis for bike & ride potential using Digitransit Routing API. Koskela was selected as the study area for developing and testing the analysis. Being less connected to fast PT routes than the surrounding neighborhoods (e.g. Kumpula & Käpylä), considerable bike & ride potential was anticipated for the area. 
+Also, a smaller side project was composed as a proof of concept of spatial analysis for bike & ride potential using Digitransit Routing API. Koskela was selected as the study area for developing and testing the analysis. Being less connected to fast PT routes than the surrounding neighborhoods (e.g. Kumpula & Käpylä), considerable bike & ride potential was anticipated for the area. 
 
 **The analysis is based on the following assumptions:**
 * Cycling can be modelled as fast walking (in routing)
