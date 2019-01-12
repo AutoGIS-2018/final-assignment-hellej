@@ -71,8 +71,8 @@ if(len(targetGeom.index) > 1):
     target_info = tts.gather_target_info(targetGeom, 'name', 'address', digitransit)
     if (target_info is not None):
         if (digitransit == True):
-            now_later = i_utils.get_user_input('\nNow or at specific time? (type now or later): ', ['now', 'later'], False, 'word now or later must be typed.')
-            if (now_later.lower() == 'later'):
+            now_or_later = i_utils.get_user_input('\nNow or at specific time? (type now or later): ', ['now', 'later'], False, 'word now or later must be typed.')
+            if (now_or_later.lower() == 'later'):
                 # ask user inputs for setting travel time
                 weekend_weekday = i_utils.get_user_input('Weekday, Saturday or Sunday? (type one): ', ['weekday', 'saturday', 'sunday'], False, 'you must type one of the trhee options.')
                 hh = i_utils.get_user_input_int('Type time: hours (0-24): ', 0, 24, 'invalid number')
@@ -86,6 +86,7 @@ if(len(targetGeom.index) > 1):
                     day = t_utils.get_next_sunday()
                 time = t_utils.get_datetime(day, hh, mm)
                 print('routing time set to: '+ str(time))
+            # if now was selected:
             else:
                 time = datetime.now()
             # collect and get all travel times between targets as dictionary
