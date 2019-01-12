@@ -65,16 +65,16 @@ if(targetGeom is None):
 # proceed to route optimization if length of target geometries is more than 1
 if(len(targetGeom.index) > 1):
     # ask wether travel time matrix or Digitransit API should be usod to obtain travel time information
-    matrix_or_digitransit = i_utils.get_user_input('\nDo you want to extract travel times from travel time matrix or Digitransit API? "matrix"/"digitransit": ', ['matrix', 'digitransit'], False, '').lower()
+    matrix_or_digitransit = i_utils.get_user_input('\nDo you want to get travel times from travel time matrix or Digitransit API? (type "matrix" or "digitransit"): ', ['matrix', 'digitransit'], False, '').lower()
     digitransit = True if matrix_or_digitransit == 'digitransit' else False
     # gather and get target info as dictionary
     target_info = tts.gather_target_info(targetGeom, 'name', 'address', digitransit)
     if (target_info is not None):
         if (digitransit == True):
-            now_or_later = i_utils.get_user_input('\nNow or at specific time? (type now or later): ', ['now', 'later'], False, 'word now or later must be typed.')
+            now_or_later = i_utils.get_user_input('\nNow or at specific time? (type "now" or "later"): ', ['now', 'later'], False, 'word now or later must be typed.')
             if (now_or_later.lower() == 'later'):
                 # ask user inputs for setting travel time
-                weekend_weekday = i_utils.get_user_input('Weekday, Saturday or Sunday? (type one): ', ['weekday', 'saturday', 'sunday'], False, 'you must type one of the trhee options.')
+                weekend_weekday = i_utils.get_user_input('Weekday, Saturday or Sunday? (type one): ', ['weekday', 'saturday', 'sunday'], False, 'you must type one of the three options.')
                 hh = i_utils.get_user_input_int('Type time: hours (0-24): ', 0, 24, 'invalid number')
                 mm = i_utils.get_user_input_int('Type time: minutes (0-59): ', 0, 59, 'invalid number')
                 # set travel time based on user input
@@ -85,7 +85,7 @@ if(len(targetGeom.index) > 1):
                 else:
                     day = t_utils.get_next_sunday()
                 time = t_utils.get_datetime(day, hh, mm)
-                print('routing time set to: '+ str(time))
+                print('Routing time set to: '+ str(time))
             # if now was selected:
             else:
                 time = datetime.now()
@@ -105,8 +105,8 @@ if(len(targetGeom.index) > 1):
             print('\nSelect origin and destination from ', end='')
             stopnames = [target['name'] for target in target_info.values()]
             print(stopnames)
-            origin = i_utils.get_user_input('type origin name (or leave empty): ', stopnames + [''], True, 'invalid stop name')
-            destination = i_utils.get_user_input('type destination name (or leave empty): ', stopnames + [''], True, 'invalid stop name')
+            origin = i_utils.get_user_input('Type origin name (or leave empty): ', stopnames + [''], True, 'invalid stop name')
+            destination = i_utils.get_user_input('Type destination name (or leave empty): ', stopnames + [''], True, 'invalid stop name')
             # get best routes based on shortest total travel times
             best_routes = rtts.get_best_routes(all_ttimes_summary, origin, destination)
             rtts.print_best_route_info(best_routes, target_info)

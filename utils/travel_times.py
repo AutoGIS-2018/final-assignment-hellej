@@ -58,7 +58,7 @@ def get_tt_between_targets_DT(target_info, time):
     # e.g. { 'stopid_1': {'stopid_2': 15, 'stopid_3': 20 }, 'stopid_2': {'stopid_1': 17, 'stopid_3': 10} ... }
     target_ids = target_info.keys()
     tts = {}
-    sys.stdout.write('\nquerying travel times to targets: ')
+    sys.stdout.write('\nQuerying travel times to targets: ')
     sys.stdout.flush()
     for idx, to_id in enumerate(target_ids):
         sys.stdout.write(str(idx+1)+'/'+str(len(target_ids))+' ')
@@ -71,6 +71,9 @@ def get_tt_between_targets_DT(target_info, time):
                     from_tt = dt_rt.get_mean_travel_time(target_info[from_id]['latLon'], target_info[to_id]['latLon'], walkSpeed, 6000, 2, True, time)
                     to_tts[from_id] = from_tt
             tts[to_id] = to_tts
+            if (idx == len(target_ids)-1):
+                sys.stdout.write('done.')
+                sys.stdout.flush()
         except:
             print('\nError: no travel time file found for: '+ (target_info[to_id]['name'])+'.\n')
             return
@@ -81,7 +84,7 @@ def get_tt_between_targets_matrix(target_info, folder):
     # e.g. { 'stopid_1': {'stopid_2': 15, 'stopid_3': 20 }, 'stopid_2': {'stopid_1': 17, 'stopid_3': 10} ... }
     target_ids = target_info.keys()
     tts = {}
-    sys.stdout.write('\nquerying travel times to targets: ')
+    sys.stdout.write('\nQuerying travel times to targets: ')
     sys.stdout.flush()
     for idx, to_id in enumerate(target_ids):
         sys.stdout.write(str(idx+1)+'/'+str(len(target_ids))+' ')
@@ -94,6 +97,9 @@ def get_tt_between_targets_matrix(target_info, folder):
                 from_tt = tts_df.loc[tts_df['from_id'] == from_id].iloc[0]['pt_m_t']
                 to_tts[from_id] = from_tt
             tts[to_id] = to_tts
+            if (idx == len(target_ids)-1):
+                sys.stdout.write('done.')
+                sys.stdout.flush()
         except:
             print('\nError: no travel time file found for: '+ (target_info[to_id]['name'])+'.\n')
             return

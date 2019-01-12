@@ -7,7 +7,7 @@ def get_target_permutations(tt_dfs):
     print('\nGet all possible routes...')
     # get all possible sequences of stops
     to_ids_perms = list(itr.permutations(to_ids, len(to_ids)))
-    print('found', len(to_ids_perms), 'route options')
+    print('Found', len(to_ids_perms), 'route options')
     return to_ids_perms
 
 def get_all_ttimes(target_perms, tts_all):
