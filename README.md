@@ -35,12 +35,13 @@ $ python route_planner_app.py
   ├── data
   │   ├── HelsinkiTravelTimeMatrix2018/ */ *.txt     
   │   └── MetropAccessGrid/ *.shp
-  ├── demo
-  │   ├── bike_and_ride_potential.py  
-  │   ├── dt_geocode.py             # Jupyter notebook like script file to run with VSCode
-  │   ├── dt_routing.py             # Jupyter notebook like script file to run with VSCode
-  │   ├── optimize_route.py         # Jupyter notebook like script file to run with VSCode
-  │   └── route-optim-outputs.md    # Outputs of example runs
+  ├── demo 
+  │   ├── * .py                     # Jupyter notebook like scripts to run with VSCode
+  │   ├── bike_ride_potential.py    # Example analysis for bike & ride potential in Koskela
+  │   ├── dt_geocode.py             # Geocode address using utils.dt_geocode.py
+  │   ├── dt_routing.py             # Get route using utils.dt_routing.py
+  │   ├── optimize_route.py         # Optimize multi-stop route
+  │   └── route-optim-outputs.md    # Example outputs of route_planner_app.py
   ├── input
   │   └── *.shp                     # Optional locations to use in multi-stop route optimization
   ├── utils                         # Utils-module
@@ -48,15 +49,15 @@ $ python route_planner_app.py
   │   ├── dt_geocode.py             # Utilization of Digitransit Geocoding API
   │   ├── dt_routing.py             # Utilization of Digitransit Routing API
   │   ├── routes_tt.py              # Forming and comparing multi-stop route options
+  │   ├── times.py                  # Creating and handling datetime objects
   │   ├── travel_times.py           # Collecting travel times from travel time matrixes or Digitransit API
-  │   └── utils.py                  # General utilities
+  │   └── user_inputs.py            # Asking and validating keyboard inputs
   │── demo_geocoding.ipynb
   │── demo_route_optim.ipynb
-  └── route_planner_app.py          # Main application (run this in terminal)
+  └── route_planner_app.py          # Main application, run this in terminal
 ```
 
-
-# A side project: analysis for bike & ride potential using Digitransit Routing API 
+# A side project: <br/>Analysis for bike & ride potential using Digitransit Routing API 
 A smaller side project was also composed as a proof of concept of spatial analysis for bike & ride potential using Digitransit Routing API. Koskela was selected as the study area for developing and testing the analysis. Being less connected to fast PT routes than the surrounding neighborhoods (e.g. Kumpula & Käpylä), considerable bike & ride potential was anticipated for the area. 
 
 **The analysis is based on the following assumptions:**
@@ -65,19 +66,29 @@ A smaller side project was also composed as a proof of concept of spatial analys
 * It takes additional 30 s to both get the bike and lock it at the destination
 * It takes additional 2 min to walk from the bicycle stand to the station/stop
 
-**The analysis proceeds with the following logic:**
+**The [analysis](demo/bike_ride_potential.py) utilizes [these functions](utils/bike_ride_potential.py) and proceeds with the following logic:**
 1) Polygon centers are extracted from HSY's 250m population grid
-2) Center points that fall inside the area of interest are selected for analysis
+2) Center points that fall inside the area of interest (Koskela polygon) are selected for analysis
 3) Routing is executed from each point to Helsinki Central Station
 4) In the routing, walking speed is set as cycling speed
 5) From the returned four itineraries, two fastest are selected for further processing
-6) The first legs of the itineraries are taken as cycling 
-7) If the first "legs" of the two routes are to different stations, both of them are analyzed
-8) Bike & ride hubs are identified as the stations where most of the cycling legs end
-9) Cumulative reached population and average time saved are aggregated for each bike & ride hub
-10) Results are visualized as a map
+6) The first legs of the itineraries are taken as cycling
+7) If the first legs of the two routes are to different stations, both of them are analyzed
+8) Cumulative reached population and average time saved are aggregated for each bike & ride hub
+9) Results are visualized as a map
+
+**Interpretation of the [visualization](demo/output/koskela_br.png)**
+* Two most prominent bike & ride hubs for the AOI can be identified: Käpylä & Oulunkylä train stations
+* Choosing bike & ride itinerary (instead of normal walk & ride itinerary) has the potential to reduce travel times from 8 to 15 minutes (to city center)
+* Greatest benefits from bike & ride itineraries are located near the center of the AOI where proximity to trunk routes of PT is the furthest (labels above the origins are saved minutes)
 
 ![bike_ride_potential_koskela](demo/output/koskela_br.png)
+
+**What next?**
+* Better considerations of parameters of the analysis are required (cycling speed, locking time, transfer costs etc.)
+* Also frequency of departures from different stations should be considered in order to determine their relative attractiveness
+* Relative attractiveness of different bike & ride hubs (stations) should be considered when selecting the best bike & ride itineraries
+* Analysis for the whole municipality?
 
 ## License
 [MIT](LICENSE)
