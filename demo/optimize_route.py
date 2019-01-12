@@ -21,7 +21,7 @@ print(target_info)
 
 #%%
 # read and gather only relevant travel time dataframes to a dictionary
-tts_dict = tts.get_tt_between_targets(target_info, 'data/HelsinkiTravelTimeMatrix2018/', digitransit)
+tts_dict = tts.get_tt_between_targets_matrix(target_info, 'data/HelsinkiTravelTimeMatrix2018/')
 
 #%%
 # find and collect all possible route options
