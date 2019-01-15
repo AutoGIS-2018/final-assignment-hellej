@@ -1,13 +1,13 @@
 Read the final assignment instructions from the [https://autogis.github.io](https://automating-gis-processes.github.io/2018/lessons/FA/final-assignment.html).
 
 ## Table of Contents
-[Multi-Stop Route Optimizer Tool](#multi-stop-route-optimizer-tool)
-* [Introduction](#introduction)
-* [Usage](#usage)
-* [Installation](#installation)
-* [Starting the program](#starting-the-program)
-* [Components](#components)
-
+<!--ts-->
+* [Multi-Stop Route Optimizer Tool](#multi-stop-route-optimizer-tool)
+  * [Introduction](#introduction)
+  * [Usage](#usage)
+  * [Installation](#installation)
+  * [Starting the program](#starting-the-program)
+  * [Components](#components)
 * [Analysis for bike & ride potential using Digitransit Routing API](#analysis-for-bike--ride-potential-using-Digitransit-Routing-API)
   * [Background](#background)
   * [Data & Methods](#data--methods)
@@ -15,6 +15,7 @@ Read the final assignment instructions from the [https://autogis.github.io](http
   * [Discussion - how to further develop the analysis?](#discussion---how-to-further-develop-the-analysis?)
   * [Map of bike & ride potential in Koskela](#map-of-bike--ride-potential-in-koskela)
   * [License](LICENSE)
+  <!--te-->
 
 # Multi-Stop Route Optimizer Tool
 ## Introduction
