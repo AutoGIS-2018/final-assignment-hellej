@@ -1,21 +1,20 @@
 Read the final assignment instructions from the [https://autogis.github.io](https://automating-gis-processes.github.io/2018/lessons/FA/final-assignment.html).
 
 ## Table of Contents
-[Multi-Stop Route Optimizer Tool](#Multi-Stop-Route-Optimizer-Tool)
-- [Introduction](#Introduction)
-- [Usage](#Usage)
-- [Installation](#Installation)
-- [Starting the program](#Starting-the-program)
-- [Components](#Components)
+[Multi-Stop Route Optimizer Tool](#multi-stop-route-optimizer-tool)
+* [Introduction](#introduction)
+* [Usage](#usage)
+* [Installation](#installation)
+* [Starting the program](#starting-the-program)
+* [Components](#components)
 
-- [Analysis for bike & ride potential using Digitransit Routing API](#Analysis-for-bike-&-ride-potential-using-Digitransit-Routing-API)
-  - [Background](#Background)
-  - [Data & Methods](#Data--Methods)
-  - [Results & interpretation of the map visualization](#Results--interpretation-of-the-map-visualization)
-  - [Discussion - how to further develop the analysis?](#Discussion---how-to-further-develop-the-analysis?)
-  - [Map of bike & ride potential in Koskela](#map-of-bike--ride-potential-in-koskela)
-  - [License](LICENSE)
-
+* [Analysis for bike & ride potential using Digitransit Routing API](#analysis-for-bike--ride-potential-using-Digitransit-Routing-API)
+  * [Background](#background)
+  * [Data & Methods](#data--methods)
+  * [Results & interpretation of the map visualization](#results--interpretation-of-the-map-visualization)
+  * [Discussion - how to further develop the analysis?](#discussion---how-to-further-develop-the-analysis?)
+  * [Map of bike & ride potential in Koskela](#map-of-bike--ride-potential-in-koskela)
+  * [License](LICENSE)
 
 # Multi-Stop Route Optimizer Tool
 ## Introduction
