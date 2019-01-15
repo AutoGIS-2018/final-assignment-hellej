@@ -12,9 +12,9 @@ Read the final assignment instructions from the [https://autogis.github.io](http
   * [Background](#background)
   * [Data & Methods](#data--methods)
   * [Results & interpretation of the map visualization](#results--interpretation-of-the-map-visualization)
-  * [Discussion - how to further develop the analysis?](#discussion---how-to-further-develop-the-analysis?)
+  * [Discussion - how to further develop the analysis?](#discussion---how-to-further-develop-the-analysis)
   * [Map of bike & ride potential in Koskela](#map-of-bike--ride-potential-in-koskela)
-  * [License](LICENSE)
+* [License](LICENSE)
   <!--te-->
 
 # Multi-Stop Route Optimizer Tool
